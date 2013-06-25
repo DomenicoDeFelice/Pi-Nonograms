@@ -1,0 +1,169 @@
+table.nonogram.default {
+	border-spacing: 0;
+	border-collapse: collapse;
+	empty-cells: show;
+	/*
+		Image credits to ClipArtLord.com
+		http://www.clipartlord.com/free-chubby-cartoon-koala-clip-art/
+	*/
+	background-image: url("koala.png");
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+table.nonogram.default.nonogram_solved {
+}
+
+table.nonogram.default td.nonogram_column_definition.nonogram_hovered_column,
+table.nonogram.default tr.nonogram_row:hover td.nonogram_row_definition  {
+	background-color: #FFEBD9;
+}
+
+table.nonogram.default td.nonogram_definition {
+	font-size: 18px;
+	font-weight: bolder;
+	color: black;
+}
+
+table.nonogram.default td.nonogram_definition .nonogram_solved_sequence {
+	color: #aaaaaa;
+	font-weight: normal;
+	text-decoration: line-through;
+}
+
+table.nonogram.default td.nonogram_row_definition {
+	text-align: right;
+	min-width: 50px;
+	padding-right: 10px;
+}
+
+table.nonogram.default td.nonogram_column_definition {
+	text-align: center;
+	vertical-align: bottom;
+	height: 50px;
+	padding-bottom: 5px;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_cell {
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border: thin solid orange;
+}
+
+table.nonogram.default.nonogram_solved td.nonogram_cell {
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border: thin solid transparent;
+}
+
+table.nonogram.default.nonogram_playing tr.nonogram_separation_row td {
+	height: 1px;
+	background-color: orange;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_separation_column{
+	width: 1px;
+	background-color: orange;
+}
+
+table.nonogram.default.nonogram_solved tr.nonogram_separation_row td {
+	opacity: 0;
+}
+
+table.nonogram.default.nonogram_solved td.nonogram_separation_column{
+	opacity: 0;
+}
+
+
+/*
+              _                              
+             | |                             
+  _   _ _ __ | | ___ __   _____      ___ __  
+ | | | | '_ \| |/ / '_ \ / _ \ \ /\ / / '_ \ 
+ | |_| | | | |   <| | | | (_) \ V  V /| | | |
+  \__,_|_| |_|_|\_\_| |_|\___/ \_/\_/ |_| |_|
+
+*/
+
+table.nonogram.default.nonogram_playing td.nonogram_unknown_cell {
+	background-color: #dddddd;
+	opacity: 0.95;
+}
+
+table.nonogram.default.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell {
+	background-color: #e7e7e7;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column {
+	background-color: #e7e7e7;
+}
+
+/*
+   __ _ _ _          _ 
+  / _(_) | |        | |
+ | |_ _| | | ___  __| |
+ |  _| | | |/ _ \/ _` |
+ | | | | | |  __/ (_| |
+ |_| |_|_|_|\___|\__,_|                     
+
+ */                       
+					  
+table.nonogram.default.nonogram_playing td.nonogram_filled_cell {
+	background-color: black;
+	opacity: 0.95;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_filled_cell.nonogram_correct_guess {
+	opacity: 0.6 !important;
+}
+
+table.nonogram.default.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell {
+	background-color: #4c4c4c;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column {
+	background-color: #4c4c4c;
+}
+
+table.nonogram.default.nonogram_solved td.nonogram_filled_cell {
+	opacity: 0;
+}
+
+/*
+                       _         
+                      | |        
+   ___ _ __ ___  _ __ | |_ _   _ 
+  / _ \ '_ ` _ \| '_ \| __| | | |
+ |  __/ | | | | | |_) | |_| |_| |
+  \___|_| |_| |_| .__/ \__|\__, |
+                | |         __/ |
+                |_|        |___/ 
+
+*/
+
+table.nonogram.default.nonogram_playing td.nonogram_empty_cell {
+	background-image: url('empty_cell.gif');
+	background-repeat: no-repeat;
+	opacity: 0.95;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_empty_cell.nonogram_correct_guess {
+	opacity: 0.7 !important;
+}
+
+table.nonogram.default.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell {
+	background-image: url('hovered_empty_cell.gif');
+	background-repeat: no-repeat;
+}
+
+table.nonogram.default.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column {
+	background-image: url('hovered_empty_cell.gif');
+	background-repeat: no-repeat;
+}
+
+table.nonogram.default.nonogram_solved td.nonogram_empty_cell {
+	opacity: 0;
+}
+

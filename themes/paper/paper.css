@@ -1,0 +1,155 @@
+table.nonogram.paper {
+	border-spacing: 0;
+	border-collapse: collapse;
+	empty-cells: show;
+	/*
+		Image credits to:
+		http://bgfons.com/download/278
+	*/
+	background-image: url("paper.jpg");
+	background-position: top left;
+	background-repeat: no-repeat;
+}
+
+table.nonogram.paper.nonogram_solved {
+}
+
+table.nonogram.paper td.nonogram_column_definition.nonogram_hovered_column,
+table.nonogram.paper tr.nonogram_row:hover td.nonogram_row_definition  {
+	background-color: #cccccc;
+}
+
+table.nonogram.paper td.nonogram_definition {
+	font-size: 18px;
+	font-weight: bolder;
+	color: #000F55;
+}
+
+table.nonogram.paper td.nonogram_definition .nonogram_solved_sequence {
+	color: #aaaaaa;
+	font-weight: normal;
+	text-decoration: line-through;
+}
+
+table.nonogram.paper td.nonogram_row_definition {
+	text-align: right;
+	min-width: 50px;
+	padding-right: 10px;
+}
+
+table.nonogram.paper td.nonogram_column_definition {
+	text-align: center;
+	vertical-align: bottom;
+	height: 50px;
+	padding-bottom: 5px;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_cell,
+table.nonogram.paper.nonogram_solved td.nonogram_cell {
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border: thin solid #000F55;
+}
+
+table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td,
+table.nonogram.paper.nonogram_solved tr.nonogram_separation_row td {
+	height: 1px;
+	background-color: #000F55;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_separation_column,
+table.nonogram.paper.nonogram_solved td.nonogram_separation_column {
+	width: 1px;
+	background-color: #000F55;
+}
+
+
+/*
+              _                              
+             | |                             
+  _   _ _ __ | | ___ __   _____      ___ __  
+ | | | | '_ \| |/ / '_ \ / _ \ \ /\ / / '_ \ 
+ | |_| | | | |   <| | | | (_) \ V  V /| | | |
+  \__,_|_| |_|_|\_\_| |_|\___/ \_/\_/ |_| |_|
+
+*/
+
+table.nonogram.paper.nonogram_playing td.nonogram_unknown_cell,
+table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell {
+}
+
+table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell,
+table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_unknown_cell {
+	background-color: #dddddd;
+	opacity: 0.5;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column,
+table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell.nonogram_hovered_column {
+	background-color: #dddddd;
+	opacity: 0.5;
+}
+
+/*
+   __ _ _ _          _ 
+  / _(_) | |        | |
+ | |_ _| | | ___  __| |
+ |  _| | | |/ _ \/ _` |
+ | | | | | |  __/ (_| |
+ |_| |_|_|_|\___|\__,_|                     
+
+ */                       
+					  
+table.nonogram.paper.nonogram_playing td.nonogram_filled_cell,
+table.nonogram.paper.nonogram_solved td.nonogram_filled_cell{
+	background-image: url("filled.png");
+	background-repeat: no-repeat;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_correct_guess,
+table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_correct_guess {
+}
+
+table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell,
+table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_filled_cell{
+	opacity: 0.8;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column,
+table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_hovered_column {
+	opacity: 0.8;
+}
+
+
+/*
+                       _         
+                      | |        
+   ___ _ __ ___  _ __ | |_ _   _ 
+  / _ \ '_ ` _ \| '_ \| __| | | |
+ |  __/ | | | | | |_) | |_| |_| |
+  \___|_| |_| |_| .__/ \__|\__, |
+                | |         __/ |
+                |_|        |___/ 
+
+*/
+
+table.nonogram.paper.nonogram_playing td.nonogram_empty_cell,
+table.nonogram.paper.nonogram_solved td.nonogram_empty_cell {
+	background-image: url("empty.png");
+	background-repeat: no-repeat;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_correct_guess,
+table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_correct_guess {
+}
+
+table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell,
+table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_empty_cell {
+	opacity: 0.8;
+}
+
+table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column,
+table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_hovered_column {
+	opacity: 0.8;
+}
