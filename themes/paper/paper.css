@@ -63,12 +63,18 @@ table.nonogram.paper td.nonogram_column_definition {
 	padding-bottom: 5px;
 }
 
-table.nonogram.paper.nonogram_playing td.nonogram_cell,
-table.nonogram.paper.nonogram_solved td.nonogram_cell {
+table.nonogram.paper.nonogram_playing td.nonogram_cell {
 	padding: 0;
 	width: 30px;
 	height: 30px;
 	border: thin solid #000F55;
+}
+
+table.nonogram.paper.nonogram_solved td.nonogram_cell {
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border: thin solid transparent;
 }
 
 table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td {
