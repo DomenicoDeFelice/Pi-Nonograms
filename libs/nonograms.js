@@ -459,7 +459,6 @@ koala.nonograms.View.prototype = {
 		});
 
 		$(document).mouseup(function (e) {
-			e.preventDefault();
 			view.events.mouseUp.notify({event: e});
 		});
 
