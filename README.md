@@ -11,4 +11,6 @@ Instructions on how to embed it will arrive soon.
 
 Main source code is in libs/
 
-License: GNU GPLv3
+*Licensed under the GNU GPLv3 license*
+
+*Copyright 2013 by [Domenico De Felice](http://domenicodefelice.blogspot.com/p/about-me.html).*
