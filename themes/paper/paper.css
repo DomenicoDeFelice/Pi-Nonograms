@@ -71,16 +71,22 @@ table.nonogram.paper.nonogram_solved td.nonogram_cell {
 	border: thin solid #000F55;
 }
 
-table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td,
-table.nonogram.paper.nonogram_solved tr.nonogram_separation_row td {
+table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td {
 	height: 1px;
 	background-color: #000F55;
 }
 
-table.nonogram.paper.nonogram_playing td.nonogram_separation_column,
-table.nonogram.paper.nonogram_solved td.nonogram_separation_column {
+table.nonogram.paper.nonogram_playing td.nonogram_separation_column {
 	width: 1px;
 	background-color: #000F55;
+}
+
+table.nonogram.paper.nonogram_solved tr.nonogram_separation_row td {
+	opacity: 0;
+}
+
+table.nonogram.paper.nonogram_solved td.nonogram_separation_column{
+	opacity: 0;
 }
 
 
