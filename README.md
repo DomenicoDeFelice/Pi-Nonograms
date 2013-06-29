@@ -9,6 +9,6 @@ You can try it on the [official website](http://freenonograms.altervista.org) an
 
 Instructions on how to embed it will arrive soon.
 
-Main source code is in libs/
+Main source code is inside [libs/](https://github.com/DomenicoDeFelice/Koala-Nonograms/tree/master/libs).
 
 *Licensed under the GNU GPLv3 license by [Domenico De Felice](http://domenicodefelice.blogspot.com/p/about-me.html).*
