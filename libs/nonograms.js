@@ -308,7 +308,6 @@ koala.nonograms.View = function (model, container) {
 	// Events fired by the View
 	this.events = {};
 
-	this.events.clickOnCell     = new koala.utils.Event(this);
 	this.events.mouseDownOnCell = new koala.utils.Event(this);
 	this.events.mouseUp         = new koala.utils.Event(this);
 	this.events.mouseEntersCell = new koala.utils.Event(this);
@@ -442,16 +441,10 @@ koala.nonograms.View.prototype = {
 
 		// Events firing code
 		var view = this;
-		table.click(function (e) {
-			if (e.target.nodeName != "TD") return;
-
-			e.preventDefault();
-			var cellData = $(e.target).data();
-			view.events.clickOnCell.notify(cellData);
-		});
-
 		table.mousedown(function (e) {
 			if (e.target.nodeName != "TD") return;
+			// Only take in consideration left button clicks
+			if (e.which !== 1) return;
 
 			e.preventDefault();
 			var cellData = $(e.target).data();
