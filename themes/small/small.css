@@ -99,15 +99,15 @@ table.nonogram.small.nonogram_solved td.nonogram_separation_column{
 
 */
 
-table.nonogram.small.nonogram_playing td.nonogram_unknown_cell {
+table.nonogram.small td.nonogram_unknown_cell {
 	background-color: #dddddd;
 }
 
-table.nonogram.small.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell {
+table.nonogram.small tr.nonogram_row:hover td.nonogram_unknown_cell {
 	background-color: #e7e7e7;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column {
+table.nonogram.small td.nonogram_unknown_cell.nonogram_hovered_column {
 	background-color: #e7e7e7;
 }
 
@@ -121,22 +121,19 @@ table.nonogram.small.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_
 
  */                       
 					  
-table.nonogram.small.nonogram_playing td.nonogram_filled_cell {
+table.nonogram.small td.nonogram_filled_cell {
 	background-color: black;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_filled_cell.nonogram_correct_guess {
+table.nonogram.small td.nonogram_filled_cell.nonogram_correct_guess {
 }
 
-table.nonogram.small.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell {
+table.nonogram.small tr.nonogram_row:hover td.nonogram_filled_cell {
 	background-color: #4c4c4c;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column {
+table.nonogram.small td.nonogram_filled_cell.nonogram_hovered_column {
 	background-color: #4c4c4c;
-}
-
-table.nonogram.small.nonogram_solved td.nonogram_filled_cell {
 }
 
 /*
@@ -151,24 +148,20 @@ table.nonogram.small.nonogram_solved td.nonogram_filled_cell {
 
 */
 
-table.nonogram.small.nonogram_playing td.nonogram_empty_cell {
+table.nonogram.small td.nonogram_empty_cell {
 	background-image: url('empty_cell.gif');
 	background-repeat: no-repeat;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_empty_cell.nonogram_correct_guess {
+table.nonogram.small td.nonogram_empty_cell.nonogram_correct_guess {
 }
 
-table.nonogram.small.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell {
+table.nonogram.small tr.nonogram_row:hover td.nonogram_empty_cell {
 	background-image: url('hovered_empty_cell.gif');
 	background-repeat: no-repeat;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column {
+table.nonogram.small td.nonogram_empty_cell.nonogram_hovered_column {
 	background-image: url('hovered_empty_cell.gif');
 	background-repeat: no-repeat;
 }
-
-table.nonogram.small.nonogram_solved td.nonogram_empty_cell {
-}
-
