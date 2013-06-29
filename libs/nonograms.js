@@ -459,7 +459,7 @@ koala.nonograms.View.prototype = {
 		});
 
 		$(document).mouseup(function (e) {
-			view.events.mouseUp.notify({event: e});
+			view.events.mouseUp.notify();
 		});
 
 		table.mouseover(function (e) {
