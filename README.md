@@ -5,7 +5,7 @@ Koala Nonograms
 
 Learn more about [nonograms](http://en.wikipedia.org/wiki/Nonogram).
 
-You can try it on the **[official website](http://freenonograms.altervista.org)** and embed it freely in your website.
+Play the game on the **[website](http://freenonograms.altervista.org)** and embed it freely in yours.
 
 Instructions on how to embed it will arrive soon.
 
