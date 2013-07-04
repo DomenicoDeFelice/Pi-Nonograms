@@ -18,8 +18,9 @@
 */
 
 table.nonogram.default {
+	/* Collapsed borders seem to have problems with opacity on IE and FF */
+	border-collapse: separate;
 	border-spacing: 0;
-	border-collapse: collapse;
 	empty-cells: show;
 	/*
 		Image credits to ClipArtLord.com
