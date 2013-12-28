@@ -1,7 +1,9 @@
 /*
-	A Nonogram game written in Javascript
+    A Nonogram game written in Javascript
     Copyright (C) 2013 Domenico De Felice
-	http://domenicodefelice.blogspot.com
+    http://domenicodefelice.blogspot.com
+    Try the game on:
+    http://freenonograms.altervista.org
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
