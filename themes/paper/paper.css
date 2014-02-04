@@ -1,33 +1,33 @@
 /*
-	Koala Nonograms theme resembling paper
-    Copyright (C) 2013 Domenico De Felice
-	http://domenicodefelice.blogspot.com
+  Koala Nonograms theme resembling paper
+  Copyright (C) 2013 Domenico De Felice
+  http://domenicodefelice.blogspot.com
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 table.nonogram.paper {
-	border-spacing: 0;
-	border-collapse: collapse;
-	empty-cells: show;
-	/*
-		Image credits to:
-		http://bgfons.com/download/278
-	*/
-	background-image: url("paper.jpg");
-	background-position: top left;
-	background-repeat: no-repeat;
+    border-spacing: 0;
+    border-collapse: collapse;
+    empty-cells: show;
+    /*
+      Image credits to:
+      http://bgfons.com/download/278
+    */
+    background-image: url("paper.jpg");
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 
 table.nonogram.paper.nonogram_solved {
@@ -35,64 +35,64 @@ table.nonogram.paper.nonogram_solved {
 
 table.nonogram.paper td.nonogram_column_definition.nonogram_hovered_column,
 table.nonogram.paper tr.nonogram_row:hover td.nonogram_row_definition  {
-	background-color: #cccccc;
+    background-color: #cccccc;
 }
 
 table.nonogram.paper td.nonogram_definition {
-	font-size: 18px;
-	font-weight: bolder;
-	color: #000F55;
+    font-size: 18px;
+    font-weight: bolder;
+    color: #000F55;
 }
 
 table.nonogram.paper td.nonogram_definition .nonogram_solved_sequence {
-	color: #aaaaaa;
-	font-weight: normal;
-	text-decoration: line-through;
+    color: #aaaaaa;
+    font-weight: normal;
+    text-decoration: line-through;
 }
 
 table.nonogram.paper td.nonogram_row_definition {
-	text-align: right;
-	min-width: 50px;
-	padding-right: 10px;
+    text-align: right;
+    min-width: 50px;
+    padding-right: 10px;
 }
 
 table.nonogram.paper td.nonogram_column_definition {
-	text-align: center;
-	vertical-align: bottom;
-	height: 50px;
-	padding-bottom: 5px;
+    text-align: center;
+    vertical-align: bottom;
+    height: 50px;
+    padding-bottom: 5px;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_cell {
-	padding: 0;
-	width: 30px;
-	height: 30px;
-	border: thin solid #000F55;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border: thin solid #000F55;
 }
 
 table.nonogram.paper.nonogram_solved td.nonogram_cell {
-	padding: 0;
-	width: 30px;
-	height: 30px;
-	border: thin solid transparent;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    border: thin solid transparent;
 }
 
 table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td {
-	height: 1px;
-	background-color: #000F55;
+    height: 1px;
+    background-color: #000F55;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_separation_column {
-	width: 1px;
-	background-color: #000F55;
+    width: 1px;
+    background-color: #000F55;
 }
 
 table.nonogram.paper.nonogram_solved tr.nonogram_separation_row td {
-	opacity: 0;
+    opacity: 0;
 }
 
 table.nonogram.paper.nonogram_solved td.nonogram_separation_column{
-	opacity: 0;
+    opacity: 0;
 }
 
 
@@ -112,14 +112,14 @@ table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell {
 
 table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell,
 table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_unknown_cell {
-	background-color: #dddddd;
-	opacity: 0.5;
+    background-color: #dddddd;
+    opacity: 0.5;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column,
 table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell.nonogram_hovered_column {
-	background-color: #dddddd;
-	opacity: 0.5;
+    background-color: #dddddd;
+    opacity: 0.5;
 }
 
 /*
@@ -134,8 +134,8 @@ table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell.nonogram_hovered_c
 					  
 table.nonogram.paper.nonogram_playing td.nonogram_filled_cell,
 table.nonogram.paper.nonogram_solved td.nonogram_filled_cell{
-	background-image: url("filled.png");
-	background-repeat: no-repeat;
+    background-image: url("filled.png");
+    background-repeat: no-repeat;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_correct_guess,
@@ -144,12 +144,12 @@ table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_correct_gu
 
 table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell,
 table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_filled_cell{
-	opacity: 0.8;
+    opacity: 0.8;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column,
 table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_hovered_column {
-	opacity: 0.8;
+    opacity: 0.8;
 }
 
 
@@ -167,8 +167,8 @@ table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_hovered_co
 
 table.nonogram.paper.nonogram_playing td.nonogram_empty_cell,
 table.nonogram.paper.nonogram_solved td.nonogram_empty_cell {
-	background-image: url("empty.png");
-	background-repeat: no-repeat;
+    background-image: url("empty.png");
+    background-repeat: no-repeat;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_correct_guess,
@@ -177,10 +177,10 @@ table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_correct_gue
 
 table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell,
 table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_empty_cell {
-	opacity: 0.8;
+    opacity: 0.8;
 }
 
 table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column,
 table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_hovered_column {
-	opacity: 0.8;
+    opacity: 0.8;
 }

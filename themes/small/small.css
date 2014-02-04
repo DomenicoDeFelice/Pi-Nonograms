@@ -1,26 +1,26 @@
 /*
-	Koala Nonograms "small" theme
-    Copyright (C) 2013 Domenico De Felice
-	http://domenicodefelice.blogspot.com
+  Koala Nonograms "small" theme
+  Copyright (C) 2013 Domenico De Felice
+  http://domenicodefelice.blogspot.com
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 table.nonogram.small {
-	border-spacing: 0;
-	border-collapse: collapse;
-	empty-cells: show;
+    border-spacing: 0;
+    border-collapse: collapse;
+    empty-cells: show;
 }
 
 table.nonogram.small.nonogram_solved {
@@ -28,64 +28,64 @@ table.nonogram.small.nonogram_solved {
 
 table.nonogram.small td.nonogram_column_definition.nonogram_hovered_column,
 table.nonogram.small tr.nonogram_row:hover td.nonogram_row_definition  {
-	background-color: #FFEBD9;
+    background-color: #FFEBD9;
 }
 
 table.nonogram.small td.nonogram_definition {
-	font-size: 12px;
-	font-weight: bolder;
-	color: black;
+    font-size: 12px;
+    font-weight: bolder;
+    color: black;
 }
 
 table.nonogram.small td.nonogram_definition .nonogram_solved_sequence {
-	color: #aaaaaa;
-	font-weight: normal;
-	text-decoration: line-through;
+    color: #aaaaaa;
+    font-weight: normal;
+    text-decoration: line-through;
 }
 
 table.nonogram.small td.nonogram_row_definition {
-	text-align: right;
-	min-width: 20px;
-	padding-right: 5px;
+    text-align: right;
+    min-width: 20px;
+    padding-right: 5px;
 }
 
 table.nonogram.small td.nonogram_column_definition {
-	text-align: center;
-	vertical-align: bottom;
-	height: 20px;
-	padding-bottom: 2px;
+    text-align: center;
+    vertical-align: bottom;
+    height: 20px;
+    padding-bottom: 2px;
 }
 
 table.nonogram.small.nonogram_playing td.nonogram_cell {
-	padding: 0;
-	width: 18px;
-	height: 18px;
-	border: thin solid orange;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    border: thin solid orange;
 }
 
 table.nonogram.small.nonogram_solved td.nonogram_cell {
-	padding: 0;
-	width: 18px;
-	height: 18px;
-	border: thin solid transparent;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    border: thin solid transparent;
 }
 
 table.nonogram.small.nonogram_playing tr.nonogram_separation_row td {
-	height: 1px;
-	background-color: orange;
+    height: 1px;
+    background-color: orange;
 }
 
 table.nonogram.small.nonogram_playing td.nonogram_separation_column{
-	width: 1px;
-	background-color: orange;
+    width: 1px;
+    background-color: orange;
 }
 
 table.nonogram.small.nonogram_solved tr.nonogram_separation_row td {
-	opacity: 0;
+    opacity: 0;
 }
 
 table.nonogram.small.nonogram_solved td.nonogram_separation_column{
-	opacity: 0;
+    opacity: 0;
 }
 
 
@@ -100,15 +100,15 @@ table.nonogram.small.nonogram_solved td.nonogram_separation_column{
 */
 
 table.nonogram.small td.nonogram_unknown_cell {
-	background-color: #dddddd;
+    background-color: #dddddd;
 }
 
 table.nonogram.small tr.nonogram_row:hover td.nonogram_unknown_cell {
-	background-color: #e7e7e7;
+    background-color: #e7e7e7;
 }
 
 table.nonogram.small td.nonogram_unknown_cell.nonogram_hovered_column {
-	background-color: #e7e7e7;
+    background-color: #e7e7e7;
 }
 
 /*
@@ -122,18 +122,18 @@ table.nonogram.small td.nonogram_unknown_cell.nonogram_hovered_column {
  */                       
 					  
 table.nonogram.small td.nonogram_filled_cell {
-	background-color: black;
+    background-color: black;
 }
 
 table.nonogram.small td.nonogram_filled_cell.nonogram_correct_guess {
 }
 
 table.nonogram.small tr.nonogram_row:hover td.nonogram_filled_cell {
-	background-color: #4c4c4c;
+    background-color: #4c4c4c;
 }
 
 table.nonogram.small td.nonogram_filled_cell.nonogram_hovered_column {
-	background-color: #4c4c4c;
+    background-color: #4c4c4c;
 }
 
 /*
@@ -149,19 +149,19 @@ table.nonogram.small td.nonogram_filled_cell.nonogram_hovered_column {
 */
 
 table.nonogram.small td.nonogram_empty_cell {
-	background-image: url('empty_cell.gif');
-	background-repeat: no-repeat;
+    background-image: url('empty_cell.gif');
+    background-repeat: no-repeat;
 }
 
 table.nonogram.small td.nonogram_empty_cell.nonogram_correct_guess {
 }
 
 table.nonogram.small tr.nonogram_row:hover td.nonogram_empty_cell {
-	background-image: url('hovered_empty_cell.gif');
-	background-repeat: no-repeat;
+    background-image: url('hovered_empty_cell.gif');
+    background-repeat: no-repeat;
 }
 
 table.nonogram.small td.nonogram_empty_cell.nonogram_hovered_column {
-	background-image: url('hovered_empty_cell.gif');
-	background-repeat: no-repeat;
+    background-image: url('hovered_empty_cell.gif');
+    background-repeat: no-repeat;
 }
