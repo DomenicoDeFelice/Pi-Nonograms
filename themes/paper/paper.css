@@ -18,6 +18,7 @@
 */
 
 table.nonogram.paper {
+    font-family: sans-serif;
     border-spacing: 0;
     border-collapse: collapse;
     empty-cells: show;
@@ -40,7 +41,6 @@ table.nonogram.paper tr.nonogram_row:hover td.nonogram_row_definition  {
 
 table.nonogram.paper td.nonogram_definition {
     font-size: 18px;
-    font-weight: bolder;
     color: #000F55;
 }
 
