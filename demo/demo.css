@@ -1,0 +1,74 @@
+html, body {
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Lucida Grande', 'Helvetica Neue', sans-serif;
+    background: rgb(255,255,255);
+    background: -moz-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%, rgba(109,109,109,1) 100%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(109,109,109,1)));
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
+    background: -o-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
+    background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#6d6d6d',GradientType=1 );
+
+    text-align: center;
+}
+
+a, a:visited {
+    color: navy;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    text-align: center;
+    margin: 0 0 0.67em 0;
+    text-shadow: 2px 2px 0 #aaaaaa;
+}
+
+.vspacer {
+    margin: 20px 0;
+}
+
+#demo {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    margin-top: 20px;
+
+    text-align: left;
+}
+
+.control {
+    margin: 0 5px 0 0;
+    float: left;
+    padding: 0 5px;
+    text-align: center;
+}
+
+.control label {
+    font-weight: bolder;
+    display: block;
+}
+
+#content {
+    display: inline-block;
+    width: 40%;
+    margin: 0 auto;
+    padding: 10px 20px;
+    text-align: left;
+    background-color: rgba(255,255,255,0.4);
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#disqus_thread {
+    margin-top: 50px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
