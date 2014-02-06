@@ -1,4 +1,4 @@
-Koala Nonograms
+&pi; Nonograms
 ===============
 
 This is a game of **nonograms** written in javascript.  

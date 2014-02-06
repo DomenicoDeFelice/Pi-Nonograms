@@ -17,7 +17,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-table.nonogram.small {
+table.nonogram.classic {
     font-family: Tahoma sans-serif;
     background-color: white;
     border-spacing: 0;
@@ -25,57 +25,57 @@ table.nonogram.small {
     empty-cells: show;
 }
 
-table.nonogram.small.nonogram_solved {
+table.nonogram.classic.nonogram_solved {
     background-color: green;
 }
 
-table.nonogram.small td.nonogram_column_definition.nonogram_hovered_column,
-table.nonogram.small tr.nonogram_row:hover td.nonogram_row_definition  {
+table.nonogram.classic td.nonogram_column_definition.nonogram_hovered_column,
+table.nonogram.classic tr.nonogram_row:hover td.nonogram_row_definition  {
     background-color: #e7e7e7;
 }
 
-table.nonogram.small.nonogram_playing td.nonogram_cell {
+table.nonogram.classic.nonogram_playing td.nonogram_cell {
     cursor: pointer;
 }
 
-table.nonogram.small td.nonogram_definition {
-    font-size: 12px;
+table.nonogram.classic td.nonogram_definition {
+    font-size: 18px;
     font-weight: bolder;
     color: black;
 }
 
-table.nonogram.small td.nonogram_definition .nonogram_solved_sequence {
+table.nonogram.classic td.nonogram_definition .nonogram_solved_sequence {
     color: #aaaaaa;
     font-weight: normal;
     text-decoration: line-through;
 }
 
-table.nonogram.small td.nonogram_row_definition {
+table.nonogram.classic td.nonogram_row_definition {
     text-align: right;
-    min-width: 20px;
+    min-width: 70px;
     padding-right: 5px;
 }
 
-table.nonogram.small td.nonogram_column_definition {
+table.nonogram.classic td.nonogram_column_definition {
     text-align: center;
     vertical-align: bottom;
-    height: 20px;
+    height: 70px;
     padding-bottom: 2px;
 }
 
-table.nonogram.small td.nonogram_cell {
+table.nonogram.classic td.nonogram_cell {
     padding: 0;
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 30px;
     border: thin solid black;
 }
 
-table.nonogram.small tr.nonogram_separation_row td {
+table.nonogram.classic tr.nonogram_separation_row td {
     height: 0;
     background-color: black;
 }
 
-table.nonogram.small td.nonogram_separation_column {
+table.nonogram.classic td.nonogram_separation_column {
     width: 0;
     background-color: black;
 }
@@ -90,15 +90,15 @@ table.nonogram.small td.nonogram_separation_column {
 
 */
 
-table.nonogram.small td.nonogram_unknown_cell {
+table.nonogram.classic td.nonogram_unknown_cell {
     background-color: #ffffff;
 }
 
-table.nonogram.small tr.nonogram_row:hover td.nonogram_unknown_cell {
+table.nonogram.classic tr.nonogram_row:hover td.nonogram_unknown_cell {
     background-color: #e7e7e7;
 }
 
-table.nonogram.small td.nonogram_unknown_cell.nonogram_hovered_column {
+table.nonogram.classic td.nonogram_unknown_cell.nonogram_hovered_column {
     background-color: #e7e7e7;
 }
 
@@ -112,19 +112,19 @@ table.nonogram.small td.nonogram_unknown_cell.nonogram_hovered_column {
 
 */
 					  
-table.nonogram.small td.nonogram_filled_cell {
+table.nonogram.classic td.nonogram_filled_cell {
     border: thin solid white;
     background-color: black;
 }
 
-table.nonogram.small td.nonogram_filled_cell.nonogram_correct_guess {
+table.nonogram.classic td.nonogram_filled_cell.nonogram_correct_guess {
 }
 
-table.nonogram.small tr.nonogram_row:hover td.nonogram_filled_cell {
+table.nonogram.classic tr.nonogram_row:hover td.nonogram_filled_cell {
     background-color: #4c4c4c;
 }
 
-table.nonogram.small td.nonogram_filled_cell.nonogram_hovered_column {
+table.nonogram.classic td.nonogram_filled_cell.nonogram_hovered_column {
     background-color: #4c4c4c;
 }
 
@@ -140,20 +140,20 @@ table.nonogram.small td.nonogram_filled_cell.nonogram_hovered_column {
 
 */
 
-table.nonogram.small td.nonogram_empty_cell {
+table.nonogram.classic td.nonogram_empty_cell {
     background-image: url('empty_cell.gif');
     background-repeat: no-repeat;
 }
 
-table.nonogram.small td.nonogram_empty_cell.nonogram_correct_guess {
+table.nonogram.classic td.nonogram_empty_cell.nonogram_correct_guess {
 }
 
-table.nonogram.small tr.nonogram_row:hover td.nonogram_empty_cell {
+table.nonogram.classic tr.nonogram_row:hover td.nonogram_empty_cell {
     background-image: url('hovered_empty_cell.gif');
     background-repeat: no-repeat;
 }
 
-table.nonogram.small td.nonogram_empty_cell.nonogram_hovered_column {
+table.nonogram.classic td.nonogram_empty_cell.nonogram_hovered_column {
     background-image: url('hovered_empty_cell.gif');
     background-repeat: no-repeat;
 }
