@@ -17,7 +17,7 @@ function play() {
 
     var density    = (10 - difficulty) / 10;
 
-    nonogram = new koala.nonograms.Nonogram($("#nonogram"), {
+    nonogram = new dfd.nonograms.Nonogram($("#nonogram"), {
 	width:  width,
 	height: height,
 	theme:  theme

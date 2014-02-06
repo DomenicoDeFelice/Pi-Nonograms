@@ -25,11 +25,11 @@
 */
 
 
-if (!window.koala) {
-    window.koala = {};
+if (!window.dfd) {
+    window.dfd = {};
 }
 
-koala.nonograms = {};
+dfd.nonograms = {};
 
 
 /*
@@ -48,7 +48,7 @@ koala.nonograms = {};
                             
 */
 
-koala.nonograms.Model = function (opts) {
+dfd.nonograms.Model = function (opts) {
     if (!opts) opts = {};
     this._opts  = opts;
 
@@ -59,20 +59,20 @@ koala.nonograms.Model = function (opts) {
     this.events = {};
 
     // The ussr guessed the content of a cell
-    this.events.guessChanged     = new koala.utils.Event(this);
+    this.events.guessChanged     = new dfd.utils.Event(this);
 
     // The nonogram has been changed
-    this.events.nonogramChanged  = new koala.utils.Event(this);
+    this.events.nonogramChanged  = new dfd.utils.Event(this);
 
     // The user solved the nonogram
-    this.events.nonogramSolved   = new koala.utils.Event(this);
+    this.events.nonogramSolved   = new dfd.utils.Event(this);
 
     // The nonogram was solved but now it isn't
-    this.events.nonogramUnsolved = new koala.utils.Event(this);
+    this.events.nonogramUnsolved = new dfd.utils.Event(this);
 };
 
 
-koala.nonograms.Model.prototype = {
+dfd.nonograms.Model.prototype = {
     getCellAt: function (x, y) {
 	var index = this._indexFromXY(x, y);
 	var cell = this._actual[index];
@@ -271,7 +271,7 @@ koala.nonograms.Model.prototype = {
 
     _getRandomIndex: function () {
 	var ncells = this.width * this.height;
-	return koala.utils.randomIntegerInRange(0, ncells - 1);
+	return dfd.utils.randomIntegerInRange(0, ncells - 1);
     },
 
     _checkIfSolved: function () {
@@ -301,22 +301,22 @@ koala.nonograms.Model.prototype = {
                            
  */
 
-koala.nonograms.View = function (model, container) {
+dfd.nonograms.View = function (model, container) {
     this._model = model;
     this._container = $(container);
-    this._id = "nonogram" + koala.utils.randomIntegerInRange(0, 1000000);
+    this._id = "nonogram" + dfd.utils.randomIntegerInRange(0, 1000000);
     this._theme = "default";
 
     // Events fired by the View
     this.events = {};
 
-    this.events.mouseDownOnCell = new koala.utils.Event(this);
-    this.events.mouseUp         = new koala.utils.Event(this);
-    this.events.mouseEntersCell = new koala.utils.Event(this);
-    this.events.mouseLeavesCell = new koala.utils.Event(this);
+    this.events.mouseDownOnCell = new dfd.utils.Event(this);
+    this.events.mouseUp         = new dfd.utils.Event(this);
+    this.events.mouseEntersCell = new dfd.utils.Event(this);
+    this.events.mouseLeavesCell = new dfd.utils.Event(this);
 }
 
-koala.nonograms.View.prototype = {
+dfd.nonograms.View.prototype = {
     show: function () {
 	this.rebuildNonogram();
     },
@@ -547,8 +547,8 @@ koala.nonograms.View.prototype = {
                                                 
 */
 
-koala.nonograms.Controller = function (model, view) {
-    this._dragHelper = new koala.nonograms.dragHelper();
+dfd.nonograms.Controller = function (model, view) {
+    this._dragHelper = new dfd.nonograms.dragHelper();
 
     this._model = model;
     this._view = view;
@@ -598,7 +598,7 @@ koala.nonograms.Controller = function (model, view) {
     });
 }
 
-koala.nonograms.Controller.prototype = {
+dfd.nonograms.Controller.prototype = {
     // Private methods
 
     // cycles in [unknown, filled, empty]
@@ -639,11 +639,11 @@ koala.nonograms.Controller.prototype = {
 
 /*****************************************************/
 
-koala.nonograms.dragHelper = function () {
+dfd.nonograms.dragHelper = function () {
     this._dragging = false;
 };
 
-koala.nonograms.dragHelper.prototype = {
+dfd.nonograms.dragHelper.prototype = {
     start: function (x, y, guess) {
 	this._x1 = this._x2 = x;
 	this._y1 = this._y2 = y;
@@ -713,7 +713,7 @@ koala.nonograms.dragHelper.prototype = {
 /*  The main Nonogram object                         */
 /*****************************************************/
 
-koala.nonograms.Nonogram = function (container, opts) {
+dfd.nonograms.Nonogram = function (container, opts) {
     this._container = container;
     opts = opts || {};
 
@@ -723,16 +723,16 @@ koala.nonograms.Nonogram = function (container, opts) {
 	theme:  opts.theme  || "default"
     };
 
-    this._model = new koala.nonograms.Model({
+    this._model = new dfd.nonograms.Model({
 	width:  this._opts.width,
 	height: this._opts.height
     });
-    this._view = new koala.nonograms.View(this._model, this._container);
+    this._view = new dfd.nonograms.View(this._model, this._container);
     this._view.setTheme(this._opts.theme);
-    this._controller = new koala.nonograms.Controller(this._model, this._view);
+    this._controller = new dfd.nonograms.Controller(this._model, this._view);
 }
 
-koala.nonograms.Nonogram.prototype = {
+dfd.nonograms.Nonogram.prototype = {
     show: function () {
 	this._view.show();
     },

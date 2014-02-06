@@ -17,11 +17,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (!window.koala) {
-    window.koala = {};
+if (!window.dfd) {
+    window.dfd = {};
 }
 
-koala.utils = {
+dfd.utils = {
     randomIntegerInRange: function (min, max) {
 	return min + Math.floor(Math.random() * (max - min + 1));
     }
@@ -32,12 +32,12 @@ koala.utils = {
   Thanks to Alex Netkachov for his article:
   http://www.alexatnet.com/articles/model-view-controller-mvc-javascript
 */
-koala.utils.Event = function (sender) {
+dfd.utils.Event = function (sender) {
     this._sender = sender;
     this._listeners = [];
 };
 
-koala.utils.Event.prototype = {
+dfd.utils.Event.prototype = {
     attach: function (listener) {
         this._listeners.push(listener);
     },
