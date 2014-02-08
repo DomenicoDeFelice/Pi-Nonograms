@@ -43,6 +43,18 @@ $(function () {
 	nonogram.setTheme(newTheme);
     }).click();
 
+    $("#give_hint").click(function () {
+	nonogram.giveHint();
+    });
+
+    $("#start_over").click(function () {
+	nonogram.startOver();
+    });
+
+    // $("#show_state").click(function () {
+    // 	nonogram.showGameState();
+    // });
+
     $("#play").click(function () {
 	play();
     }).click();

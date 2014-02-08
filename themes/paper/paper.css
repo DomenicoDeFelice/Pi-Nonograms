@@ -39,6 +39,10 @@ table.nonogram.paper tr.nonogram_row:hover td.nonogram_row_definition  {
     background-color: #cccccc;
 }
 
+table.nonogram.paper.nonogram_playing td.nonogram_cell {
+    cursor: pointer;
+}
+
 table.nonogram.paper td.nonogram_definition {
     font-size: 18px;
     color: #000F55;

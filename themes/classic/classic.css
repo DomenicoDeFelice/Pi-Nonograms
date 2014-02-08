@@ -26,7 +26,6 @@ table.nonogram.classic {
 }
 
 table.nonogram.classic.nonogram_solved {
-    background-color: green;
 }
 
 table.nonogram.classic td.nonogram_column_definition.nonogram_hovered_column,

@@ -22,6 +22,7 @@ if (!window.dfd) {
 }
 
 dfd.utils = {
+    // Returns a random integer between min and max, inclusive.
     randomIntegerInRange: function (min, max) {
 	return min + Math.floor(Math.random() * (max - min + 1));
     }
