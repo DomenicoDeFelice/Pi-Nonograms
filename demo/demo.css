@@ -85,6 +85,10 @@ h1 {
     width: 100px;
 }
 
+.button_label {
+    font-weight: bolder;
+}
+
 #play {
     background-color: #00cc00;
 }

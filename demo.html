@@ -1,1 +1,78 @@
-index.html
+<!doctype html>
+<html>
+  <head>
+    <title>Nonograms - Play nonograms on-line</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="stylesheet" href="demo/demo.css">
+    <link rel="stylesheet" href="themes/classic/classic.css">
+    <link rel="stylesheet" href="themes/paper/paper.css">
+    <link rel="stylesheet" href="themes/small/small.css">
+    <link rel="stylesheet" href="themes/koala/koala.css">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/start/jquery-ui.min.css">    
+  </head>
+  <body>	
+    <a href="https://github.com/DomenicoDeFelice/Pi-Nonograms"><img id="github_ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+
+    <img src="pinonograms.png"><br>
+
+    <div id="content">
+      This is a free game of nonograms, also known as griddlers or hanjie.
+      <br><br>
+      Nonograms are logic puzzles in which cells in a grid must be filled or left blank according to numbers at the side of the grid.
+      <a href="http://en.wikipedia.org/wiki/Nonogram">Learn more</a>.
+      <br><br>
+      You are free to embed this game in your own site. Please add a link back if you do so.
+      <br><br>
+      <a href="https://github.com/DomenicoDeFelice/Pi-Nonograms">Source code repository is here</a>.
+      <br><br>
+      Your feedback is very welcome. Please <a href="#disqus_thread">leave a comment</a> to improve the game!
+    </div>
+
+    <div class="vspacer"></div>
+
+    <div id="demo">
+      <div id="nonogram"></div>
+      <hr>
+      <div class="control"><label for="width">Width</label><input type="text" id="width" value="10" size="3"></div>
+      <div class="control"><label for="height">Height</label><input type="text" id="height" value="10" size="3"></div>
+      <div class="control"><label for="difficulty_slider">Difficulty</label><div id="difficulty_slider"></div><span id="difficulty_label"></span></div>
+      <div class="control"><label for="theme">Theme</label>
+	<select id="theme">
+	  <option value="classic">Classic</option>
+	  <option value="paper">Paper</option>
+	  <option value="koala">Koala</option>
+	  <option value="small">Small</option>
+	</select>
+      </div>
+      <div id="buttons">
+	<div class="control"><button id="play"><strong>New puzzle</strong></button></div>
+	<div class="control"><button id="give_hint"><strong>Give hint</strong></button></div>
+	<div class="control"><button id="start_over"><strong>Start over</strong></button></div>
+	<div class="control"><button id="switch_mode"><strong>Play/Draw mode</strong></button></div>
+	<!-- <div class="control"><button id="show_state"><strong>Show game state</strong></button></div> -->
+      </div>
+    </div>
+
+    <div class="vspacer"></div>
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_shortname = "koalanonograms";
+      var disqus_identifier = "index";
+      var disqus_title = "Playing nonograms online with Koala nonograms";
+
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src="src/js/dfd/utils.js"></script>
+    <script src="src/js/dfd/nonograms.js"></script>
+    <script src="demo/demo.js"></script>
+  </body>
+</html>

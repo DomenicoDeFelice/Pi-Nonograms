@@ -54,6 +54,7 @@ dfd.nonograms.Model = function (opts) {
 
     this.width  = opts.width  = (opts.width  ? Number(opts.width) : 10);
     this.height = opts.height = (opts.height ? Number(opts.height) : 10);
+    this._mode  = opts.mode   = opts.mode || "play";
 
     // Events fired by the model
     this.events = {};
@@ -70,23 +71,45 @@ dfd.nonograms.Model = function (opts) {
 
 
 dfd.nonograms.Model.prototype = {
+    // Returns the state of a cell.
+    // Arguments can be the x and y coordinates of the cell or
+    // the index of the cell (second argument not passed)
     getCellAt: function (x, y) {
-	var index = this._indexFromXY(x, y);
-	var cell = this._actual[index];
+	var index;
+	if (y === undefined) {
+	    index = x;
+	} else {
+	    index = this._indexFromXY(x, y);
+	}
 
+	var cell  = this._actual[index];
 	return (cell === undefined) ? "empty" : cell;
     },
 
     getGuessAt: function (x, y) {
-	var index = this._indexFromXY(x, y);
-	var guess = this._guess[index];
+	var index;
+	if (y === undefined) {
+	    index = x;
+	} else {
+	    index = this._indexFromXY(x, y);
+	}
 
+	var guess = this._guess[index];
 	return (guess === undefined) ? "unknown" : guess;
     },
 
     setGuessAt: function (x, y, guess) {
-	var oldGuess = this.getGuessAt(x, y);
-	var index = this._indexFromXY(x, y);
+	var index;
+
+	if (guess === undefined) {
+	    // Shift arguments
+	    guess = y;
+	    index = x;
+	} else {
+	    index = this._indexFromXY(x, y);
+	}
+
+	var oldGuess = this.getGuessAt(index);
 	this._guess[index] = guess;
 
 	this.events.guessChanged.notify({
@@ -96,15 +119,28 @@ dfd.nonograms.Model.prototype = {
 	    newGuess: guess
 	});
 
-	var wasSolved = this.isSolved();
-	this._checkIfSolved();
-	var isSolved = this.isSolved();
+	if (this._mode === "play")
+	    this._checkIfSolved();
+    },
 
-	if (wasSolved && !isSolved) {
-	    this.events.nonogramUnsolved.notify();
-	} else if (!wasSolved && isSolved) {
-	    this.events.nonogramSolved.notify();
+    getMode: function () {
+	return this._mode;
+    },
+
+    setMode: function (mode) {
+	if (mode === this._mode) return;
+
+	this._mode = mode;
+
+	var nCells = this.width * this.height;
+	if (mode === "draw") {
+	    this._guess = this._actual
+	} else {
+	    this._guess = new Array(nCells);
 	}
+
+	this._setUnsolved();
+	this.events.nonogramChanged.notify();
     },
 
     isSolved: function () {
@@ -118,6 +154,8 @@ dfd.nonograms.Model.prototype = {
 	var sequenceEnd;
 	var sequenceSolved;
 	var sequenceLength = 0;
+
+	var mode = this._mode;
 		
 	for (var x = 0; x < this.width; x++) {
 	    if (this.getCellAt(x, row) === "filled") {
@@ -127,14 +165,17 @@ dfd.nonograms.Model.prototype = {
 		sequenceEnd = x-1;
 
 		sequenceSolved = false;
-		if ((sequenceBegin === 0 || this.getGuessAt(sequenceBegin-1, row) === "empty")
-		    && (sequenceEnd === this.width-1 || this.getGuessAt(sequenceEnd+1, row) === "empty")) {
 
-		    sequenceSolved = true;
-		    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-			if (this.getGuessAt(index, row) !== "filled") {
-			    sequenceSolved = false;
-			    break;
+		if (mode === "play") {
+		    if ((sequenceBegin === 0 || this.getGuessAt(sequenceBegin-1, row) === "empty")
+			&& (sequenceEnd === this.width-1 || this.getGuessAt(sequenceEnd+1, row) === "empty")) {
+
+			sequenceSolved = true;
+			for (var index = sequenceBegin; index <= sequenceEnd; index++) {
+			    if (this.getGuessAt(index, row) !== "filled") {
+				sequenceSolved = false;
+				break;
+			    }
 			}
 		    }
 		}
@@ -152,14 +193,17 @@ dfd.nonograms.Model.prototype = {
 	    sequenceEnd = x-1;
 
 	    sequenceSolved = false;
-	    if ((sequenceBegin === 0 || this.getGuessAt(sequenceBegin-1, row) === "empty")
-		&& (sequenceEnd === this.width-1 || this.getGuessAt(sequenceEnd+1, row) === "empty")) {
 
-		sequenceSolved = true;
-		for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-		    if (this.getGuessAt(index, row) !== "filled") {
-			sequenceSolved = false;
-			break;
+	    if (mode === "play") {
+		if ((sequenceBegin === 0 || this.getGuessAt(sequenceBegin-1, row) === "empty")
+		    && (sequenceEnd === this.width-1 || this.getGuessAt(sequenceEnd+1, row) === "empty")) {
+
+		    sequenceSolved = true;
+		    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
+			if (this.getGuessAt(index, row) !== "filled") {
+			    sequenceSolved = false;
+			    break;
+			}
 		    }
 		}
 	    }
@@ -180,6 +224,8 @@ dfd.nonograms.Model.prototype = {
 	var sequenceSolved;
 	var sequenceLength = 0;
 
+	var mode = this._mode;
+
 	for (var y = 0; y < this.height; y++) {
 	    if (this.getCellAt(col, y) === "filled") {
 		if (sequenceLength === 0) sequenceBegin = y;
@@ -188,14 +234,17 @@ dfd.nonograms.Model.prototype = {
 		sequenceEnd = y-1;
 
 		sequenceSolved = false;
-		if ((sequenceBegin === 0 || this.getGuessAt(col, sequenceBegin-1) === "empty")
-		    && (sequenceEnd === this.height-1 || this.getGuessAt(col, sequenceEnd+1) === "empty")) {
 
-		    sequenceSolved = true;
-		    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-			if (this.getGuessAt(col, index) !== "filled") {
-			    sequenceSolved = false;
-			    break;
+		if (mode === "play") {
+		    if ((sequenceBegin === 0 || this.getGuessAt(col, sequenceBegin-1) === "empty")
+			&& (sequenceEnd === this.height-1 || this.getGuessAt(col, sequenceEnd+1) === "empty")) {
+
+			sequenceSolved = true;
+			for (var index = sequenceBegin; index <= sequenceEnd; index++) {
+			    if (this.getGuessAt(col, index) !== "filled") {
+				sequenceSolved = false;
+				break;
+			    }
 			}
 		    }
 		}
@@ -213,14 +262,17 @@ dfd.nonograms.Model.prototype = {
 	    sequenceEnd = y-1;
 
 	    sequenceSolved = false;
-	    if ((sequenceBegin === 0 || this.getGuessAt(col, sequenceBegin-1) === "empty")
-		&& (sequenceEnd === this.height-1 || this.getGuessAt(col, sequenceEnd+1) === "empty")) {
 
-		sequenceSolved = true;
-		for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-		    if (this.getGuessAt(col, index) !== "filled") {
-			sequenceSolved = false;
-			break;
+	    if (mode === "play") {
+		if ((sequenceBegin === 0 || this.getGuessAt(col, sequenceBegin-1) === "empty")
+		    && (sequenceEnd === this.height-1 || this.getGuessAt(col, sequenceEnd+1) === "empty")) {
+
+		    sequenceSolved = true;
+		    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
+			if (this.getGuessAt(col, index) !== "filled") {
+			    sequenceSolved = false;
+			    break;
+			}
 		    }
 		}
 	    }
@@ -236,7 +288,7 @@ dfd.nonograms.Model.prototype = {
 
     giveHint: function () {
 	// Is there any hint to give?
-	if (this.isSolved()) return;
+	if (this.isSolved() || this._mode !== "play") return;
 
 	// Let's first check for errors
 	var nCells = this.width * this.height;
@@ -266,7 +318,9 @@ dfd.nonograms.Model.prototype = {
 
     randomize: function (density) {
 	this._setupNonogram();
+	this._mode = "play";
 
+	var actual = this._actual;
 	var nCells = this.width * this.height;
 	var toBeFilled = Math.floor(nCells * density);
 	if (toBeFilled > nCells) toBeFilled = nCells;
@@ -274,8 +328,8 @@ dfd.nonograms.Model.prototype = {
 	var index;
 	while (toBeFilled) {
 	    index = this._getRandomIndex();
-	    if (this._actual[index] === undefined) {
-		this._actual[index] = "filled";
+	    if (actual[index] === undefined) {
+		actual[index] = "filled";
 		toBeFilled--;
 	    }
 	}
@@ -287,6 +341,10 @@ dfd.nonograms.Model.prototype = {
 	var nCells = this.width * this.height;
 
 	this._guess = new Array(nCells);
+	if (this._mode === "draw") {
+	    this._actual = this._guess;
+	}
+
 	this._solved = false;
 
 	this.events.nonogramChanged.notify();
@@ -334,17 +392,7 @@ dfd.nonograms.Model.prototype = {
 
 	this._actual = new Array(nCells);
 	this._guess  = new Array(nCells);
-	this._solved = false;
-    },
-
-    _isCompleted: function () {
-	var nCells = this.width * this.height;
-	var guess;
-	for (var index=0; index < nCells; index++) {
-	    guess = this._guess[index];
-	    if (!guess || guess === "unknown") return false;
-	}
-	return true;
+	this._setUnsolved();
     },
 
     _indexFromXY: function (x, y) {
@@ -364,9 +412,23 @@ dfd.nonograms.Model.prototype = {
     },
 
     _getRandomXY: function () {
-	var x = dfd.utils.randomIntegerInRange(0, this.width-1);
-	var y = dfd.utils.randomIntegerInRange(0, this.height-1);
+	var x = dfd.utils.randomIntegerInRange(0, this.width  - 1);
+	var y = dfd.utils.randomIntegerInRange(0, this.height - 1);
 	return [x, y];
+    },
+
+    _setSolved: function () {
+	if (!this.isSolved()) {
+	    this._solved = true;
+	    this.events.nonogramSolved.notify();
+	}
+    },
+
+    _setUnsolved: function () {
+	if (this.isSolved()) {
+	    this._solved = false;
+	    this.events.nonogramUnsolved.notify();
+	}
     },
 
     _checkIfSolved: function () {
@@ -376,11 +438,11 @@ dfd.nonograms.Model.prototype = {
 	for (var index = actual.length; index--; ) {
 	    if ((actual[index] === "filled" && guess[index] !== "filled") ||
 		(actual[index] !== "filled" && guess[index] === "filled")) {
-		this._solved = false;
+		this._setUnsolved();
 		return;
 	    }
 	}
-	this._solved = true;
+	this._setSolved();
     }
 };
 
@@ -400,10 +462,17 @@ dfd.nonograms.Model.prototype = {
  */
 
 dfd.nonograms.View = function (model, container) {
-    this._model = model;
+    var $ = jQuery;
+    var id;
+
+    this._model     = model;
     this._container = $(container);
-    this._id = "nonogram" + dfd.utils.randomIntegerInRange(0, 1000000);
-    this._theme = "default";
+    this._theme     = "classic";
+
+    do {
+	id = "nonogram" + dfd.utils.randomIntegerInRange(0, 1000000);
+    } while ($("#" + id).length);
+    this._id = id;
 
     // Events fired by the View
     this.events = {};
@@ -420,15 +489,15 @@ dfd.nonograms.View.prototype = {
     },
 
     setSolved: function () {
-	$("#" + this._id).removeClass("nonogram_playing").addClass("nonogram_solved");
+	jQuery("#" + this._id).removeClass("nonogram_playing").addClass("nonogram_solved");
     },
 
     setUnsolved: function () {
-	$("#" + this._id).removeClass("nonogram_solved").addClass("nonogram_playing");
+	jQuery("#" + this._id).removeClass("nonogram_solved").addClass("nonogram_playing");
     },
 
     setTheme: function (theme) {
-	$("#" + this._id).removeClass(this._theme).addClass(theme);
+	jQuery("#" + this._id).removeClass(this._theme).addClass(theme);
 	this._theme = theme;
     },
 
@@ -443,6 +512,7 @@ dfd.nonograms.View.prototype = {
     },
 
     setGuessAt: function (x, y, newGuess) {
+	var $ = jQuery;
 	var cell = $("#" + this._idOfCell(x, y));
 	var oldGuess = cell.data().guess;
 
@@ -462,12 +532,12 @@ dfd.nonograms.View.prototype = {
     },
 
     rebuildNonogram: function () {
+	var $ = jQuery;
 	var width  = this._model.width,
             height = this._model.height;
-
 	var x, y, tr;
-
 	var table = $("<table/>").attr("id", this._id).addClass("nonogram").addClass(this._theme);
+
 	if (this._model.isSolved())
 	    table.addClass("nonogram_solved");
 	else
@@ -538,7 +608,7 @@ dfd.nonograms.View.prototype = {
 	    .hide()
 	    .empty()
 	    .append(table)
-	    .fadeIn(500);
+	    .show();
 
 	// Events firing code
 	var view = this;
@@ -588,7 +658,8 @@ dfd.nonograms.View.prototype = {
 
     _rowDefinitionToHTML: function (sequences) {
 	var html = "<nobr>";
-	for (var index = 0; index < sequences.length; index++) {
+	var nSeq = sequences.length;
+	for (var index = 0; index < nSeq; index++) {
 	    if (index) html += "&nbsp;";
 	    html += "<span class='nonogram_sequence";
 	    if (sequences[index].solved) {
@@ -602,7 +673,8 @@ dfd.nonograms.View.prototype = {
 	
     _columnDefinitionToHTML: function (sequences) {
 	var html = "";
-	for (var index = 0; index < sequences.length; index++) {
+	var nSeq = sequences.length;
+	for (var index = 0; index < nSeq; index++) {
 	    if (index) html += "<br>";
 	    html += "<nobr><span class='nonogram_sequence";
 	    if (sequences[index].solved) {
@@ -813,26 +885,42 @@ dfd.nonograms.dragHelper.prototype = {
 /*****************************************************/
 
 dfd.nonograms.Nonogram = function (container, opts) {
-    this._container = container;
+    var model, view, controller;
+    var default_options = dfd.nonograms.Nonogram.options;
+
     opts = opts || {};
+    for (var option in default_options) {
+	// Default value if not specified
+	opts[option] = opts[option] || default_options[option];
+    }
 
-    this._opts = {
-	width:    opts.width    || 10,
-	height:   opts.height   || 10,
-	theme:    opts.theme    || "classic",
-	onSolved: opts.onSolved || function () { alert("Congratulations! Nonogram solved!"); }
-    };
-
-    this._model = new dfd.nonograms.Model({
-	width:  this._opts.width,
-	height: this._opts.height
+    model = new dfd.nonograms.Model({
+	width:  opts.width,
+	height: opts.height
     });
-    this._model.events.nonogramSolved.attach(this._opts.onSolved);
+    model.events.nonogramSolved.attach(opts.onSolved);
 
-    this._view = new dfd.nonograms.View(this._model, this._container);
-    this._view.setTheme(this._opts.theme);
-    this._controller = new dfd.nonograms.Controller(this._model, this._view);
+    view = new dfd.nonograms.View(model, container);
+    view.setTheme(opts.theme);
+
+    controller = new dfd.nonograms.Controller(model, view);
+
+    this._model      = model
+    this._view       = view;
+    this._controller = controller;
+
+    this._container = container;
+    this._opts      = opts;
 }
+
+// Options and their default value
+dfd.nonograms.Nonogram.options = {
+    width:    10,
+    height:   10,
+    mode:     "play",
+    theme:    "classic",
+    onSolved: function () { alert("Congratulations! Nonogram solved!"); }
+};
 
 dfd.nonograms.Nonogram.prototype = {
     show: function () {
@@ -861,7 +949,15 @@ dfd.nonograms.Nonogram.prototype = {
 	this._view.setTheme(theme);
     },
 
+    getMode: function () {
+	return this._model.getMode();
+    },
+
+    setMode: function (mode) {
+	this._model.setMode(mode);
+    },
+
     showGameState: function () {
-	alert(this._model.getGameState());
+	//alert(this._model.getGameState());
     }
 };

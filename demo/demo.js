@@ -51,6 +51,11 @@ $(function () {
 	nonogram.startOver();
     });
 
+    $("#draw_mode").click(function () {
+	nonogram.setMode("draw");
+	nonogram.startOver();
+    });
+
     // $("#show_state").click(function () {
     // 	nonogram.showGameState();
     // });
