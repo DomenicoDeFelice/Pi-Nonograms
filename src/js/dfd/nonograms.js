@@ -1,9 +1,10 @@
 /*
-  A Nonogram game written in Javascript
-  Copyright (C) 2013 Domenico De Felice
-  http://domenicodefelice.blogspot.com
-  Try the game on:
-  http://freenonograms.altervista.org
+  A nonogram game written in javascript
+  https://github.com/DomenicoDeFelice/Pi-Nonograms
+
+  Play the game: http://freenonograms.altervista.org
+
+  Copyright (c) 2013-2014 Domenico De Felice
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,12 +20,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-  Thanks to Alex Netkachov for his article:
-  http://www.alexatnet.com/articles/model-view-controller-mvc-javascript
-*/
-
-
 if (!window.dfd) {
     window.dfd = {};
 }
@@ -32,11 +27,25 @@ if (!window.dfd) {
 dfd.nonograms = {};
 
 
-/*
+/* MVC pattern */
 
-  The game uses the MVC pattern.
+dfd.nonograms.Event = function (sender) {
+    this._sender = sender;
+    this._listeners = [];
+};
 
-*/
+dfd.nonograms.Event.prototype = {
+    attach: function (listener) {
+        this._listeners.push(listener);
+    },
+
+    notify: function (args) {
+        for (var index = 0, nListeners = this._listeners.length; index < nListeners; index++) {
+            this._listeners[index](this._sender, args);
+        }
+    }
+};
+
 
 /*
   __  __           _      _ 
@@ -50,23 +59,25 @@ dfd.nonograms = {};
 
 dfd.nonograms.Model = function (opts) {
     if (!opts) opts = {};
-    this._opts  = opts;
 
-    this.width  = opts.width  = (opts.width  ? Number(opts.width) : 10);
-    this.height = opts.height = (opts.height ? Number(opts.height) : 10);
-    this._mode  = opts.mode   = opts.mode || "play";
+    this.width  = opts.width;
+    this.height = opts.height;
+    this._srand = opts.srand;
 
     // Events fired by the model
     this.events = {};
 
     // The ussr guessed the content of a cell
-    this.events.guessChanged     = new dfd.utils.Event(this);
+    this.events.guessChanged     = new dfd.nonograms.Event(this);
     // The nonogram has been changed
-    this.events.nonogramChanged  = new dfd.utils.Event(this);
+    this.events.nonogramChanged  = new dfd.nonograms.Event(this);
     // The user solved the nonogram
-    this.events.nonogramSolved   = new dfd.utils.Event(this);
+    this.events.nonogramSolved   = new dfd.nonograms.Event(this);
     // The nonogram was solved but now it isn't
-    this.events.nonogramUnsolved = new dfd.utils.Event(this);
+    this.events.nonogramUnsolved = new dfd.nonograms.Event(this);
+
+    this._setupNonogram();
+    this.setMode(opts.mode);
 };
 
 
@@ -132,10 +143,10 @@ dfd.nonograms.Model.prototype = {
 
 	this._mode = mode;
 
-	var nCells = this.width * this.height;
 	if (mode === "draw") {
-	    this._guess = this._actual
+	    this._guess = this._actual;
 	} else {
+	    var nCells = this.width * this.height;
 	    this._guess = new Array(nCells);
 	}
 
@@ -408,12 +419,12 @@ dfd.nonograms.Model.prototype = {
 
     _getRandomIndex: function () {
 	var nCells = this.width * this.height;
-	return dfd.utils.randomIntegerInRange(0, nCells - 1);
+	return this._srand.randomIntegerIn(0, nCells - 1);
     },
 
     _getRandomXY: function () {
-	var x = dfd.utils.randomIntegerInRange(0, this.width  - 1);
-	var y = dfd.utils.randomIntegerInRange(0, this.height - 1);
+	var x = this._srand.randomIntegerIn(0, this.width  - 1);
+	var y = this._srand.randomIntegerIn(0, this.height - 1);
 	return [x, y];
     },
 
@@ -447,10 +458,6 @@ dfd.nonograms.Model.prototype = {
 };
 
 
-
-
-
-
 /*
  __      ___               
  \ \    / (_)              
@@ -463,24 +470,24 @@ dfd.nonograms.Model.prototype = {
 
 dfd.nonograms.View = function (model, container) {
     var $ = jQuery;
-    var id;
 
     this._model     = model;
     this._container = $(container);
     this._theme     = "classic";
 
+    var id;
     do {
-	id = "nonogram" + dfd.utils.randomIntegerInRange(0, 1000000);
+	id = "nonogram" + dfd.Srand.randomIntegerIn(0, 1000000, Math.random());
     } while ($("#" + id).length);
     this._id = id;
 
     // Events fired by the View
     this.events = {};
 
-    this.events.mouseDownOnCell = new dfd.utils.Event(this);
-    this.events.mouseUp         = new dfd.utils.Event(this);
-    this.events.mouseEntersCell = new dfd.utils.Event(this);
-    this.events.mouseLeavesCell = new dfd.utils.Event(this);
+    this.events.mouseDownOnCell = new dfd.nonograms.Event(this);
+    this.events.mouseUp         = new dfd.nonograms.Event(this);
+    this.events.mouseEntersCell = new dfd.nonograms.Event(this);
+    this.events.mouseLeavesCell = new dfd.nonograms.Event(this);
 }
 
 dfd.nonograms.View.prototype = {
@@ -896,7 +903,9 @@ dfd.nonograms.Nonogram = function (container, opts) {
 
     model = new dfd.nonograms.Model({
 	width:  opts.width,
-	height: opts.height
+	height: opts.height,
+	srand:  opts.srand,
+	mode:   opts.mode
     });
     model.events.nonogramSolved.attach(opts.onSolved);
 
@@ -919,7 +928,10 @@ dfd.nonograms.Nonogram.options = {
     height:   10,
     mode:     "play",
     theme:    "classic",
-    onSolved: function () { alert("Congratulations! Nonogram solved!"); }
+    srand:    dfd.Srand,
+    onSolved: function () {
+	alert("Congratulations! Nonogram solved!");
+    }
 };
 
 dfd.nonograms.Nonogram.prototype = {

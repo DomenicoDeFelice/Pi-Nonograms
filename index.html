@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Nonograms - Play nonograms on-line</title>
+    <title>Pi Nonograms - Play nonograms on-line</title>
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="stylesheet" href="demo/demo.css">
     <link rel="stylesheet" href="themes/classic/classic.css">
@@ -48,8 +48,8 @@
 	<div class="control"><button id="play"><span class="button_label">New puzzle</span></button></div>
 	<div class="control"><button id="give_hint"><span class="button_label">Give hint</span></button></div>
 	<div class="control"><button id="start_over"><span class="button_label">Start over</span></button></div>
-	<div class="control"><button id="draw_mode"><span class="button_label">Draw your nonogram</span></button></div>
-	<!-- <div class="control"><button id="show_state"><span class="button_label">Show game state</span></button></div> -->
+	<div class="control"><button id="draw_nonogram"><span class="button_label">Draw your nonogram</span></button></div>
+	<div class="control"><button id="play_by_id"><span class="button_label">Play #</span></button><input type="text" id="nonogram_id" value="" size="8"></div>
       </div>
     </div>
 
@@ -72,7 +72,7 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-    <script src="src/js/dfd/utils.js"></script>
+    <script src="src/js/dfd/jsrand.min.js"></script>
     <script src="src/js/dfd/nonograms.js"></script>
     <script src="demo/demo.js"></script>
   </body>
