@@ -37,14 +37,14 @@ export interface NonogramOptions {
 
 // Default options
 const DEFAULT_OPTIONS: Required<NonogramOptions> = {
-    width:    10,
-    height:   10,
-    mode:     GameMode.PLAY,
-    theme:    'classic',
-    srand:    new Srand(),
+    width: 10,
+    height: 10,
+    mode: GameMode.PLAY,
+    theme: 'classic',
+    srand: new Srand(),
     onSolved: () => {
         alert('Congratulations! Nonogram solved!');
-    }
+    },
 };
 
 export class Nonogram {
@@ -57,22 +57,13 @@ export class Nonogram {
     private opts: Required<NonogramOptions>;
 
     constructor(container: string | HTMLElement, opts?: NonogramOptions) {
-        const mergedOpts: Required<NonogramOptions> = { ...DEFAULT_OPTIONS };
-
-        // Apply user options
-        if (opts) {
-            for (const key in opts) {
-                if (opts[key as keyof NonogramOptions] !== undefined) {
-                    (mergedOpts as any)[key] = opts[key as keyof NonogramOptions];
-                }
-            }
-        }
+        const mergedOpts: Required<NonogramOptions> = { ...DEFAULT_OPTIONS, ...opts };
 
         const model = new Model({
-            width:  mergedOpts.width,
+            width: mergedOpts.width,
             height: mergedOpts.height,
-            srand:  mergedOpts.srand,
-            mode:   mergedOpts.mode
+            srand: mergedOpts.srand,
+            mode: mergedOpts.mode,
         });
         model.events.nonogramSolved.attach(mergedOpts.onSolved);
 
@@ -81,12 +72,12 @@ export class Nonogram {
 
         const controller = new Controller(model, view);
 
-        this.model      = model;
-        this.view       = view;
+        this.model = model;
+        this.view = view;
         this.controller = controller;
 
         this.container = container;
-        this.opts      = mergedOpts;
+        this.opts = mergedOpts;
     }
 
     show(): void {
@@ -94,7 +85,7 @@ export class Nonogram {
     }
 
     randomize(opts?: { density?: number }): void {
-        let density = 0.60;
+        let density = 0.6;
         if (opts && opts.density) {
             density = opts.density;
         }

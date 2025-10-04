@@ -1,27 +1,50 @@
 {
-  "name": "pi-nonograms",
-  "version": "1.0.0",
-  "description": "A nonogram game written in javascript",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "keywords": [
-    "nonogram",
-    "game",
-    "puzzle"
-  ],
-  "author": "Domenico De Felice",
-  "license": "GPL-3.0-or-later",
-  "packageManager": "pnpm@10.8.1",
-  "devDependencies": {
-    "@types/node": "^24.6.2",
-    "typescript": "^5.9.3",
-    "vite": "^7.1.9"
-  },
-  "dependencies": {
-    "seeded-rand": "^2.0.1"
-  }
+    "name": "pi-nonograms",
+    "version": "1.0.0",
+    "description": "A nonogram game written in javascript",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "prepare": "husky"
+    },
+    "keywords": [
+        "nonogram",
+        "game",
+        "puzzle"
+    ],
+    "author": "Domenico De Felice",
+    "license": "GPL-3.0-or-later",
+    "packageManager": "pnpm@10.8.1",
+    "devDependencies": {
+        "@eslint/js": "^9.37.0",
+        "@types/eslint__js": "^9.14.0",
+        "@types/node": "^24.6.2",
+        "eslint": "^9.37.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.2.3",
+        "prettier": "^3.6.2",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.45.0",
+        "vite": "^7.1.9"
+    },
+    "dependencies": {
+        "seeded-rand": "^2.0.1"
+    },
+    "lint-staged": {
+        "*.{ts,js}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{json,css,html}": [
+            "prettier --write"
+        ]
+    }
 }

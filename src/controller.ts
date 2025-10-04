@@ -35,14 +35,13 @@ export class Controller {
 
         this.model = model;
         this.view = view;
-        const controller = this;
 
         // Application Logic
         model.events.nonogramChanged.attach(() => {
             view.rebuildNonogram();
         });
 
-        model.events.guessChanged.attach((model, opts) => {
+        model.events.guessChanged.attach((_model, opts) => {
             view.setGuessAt(opts.x, opts.y, opts.newGuess);
         });
 
@@ -54,31 +53,30 @@ export class Controller {
             view.setUnsolved();
         });
 
-        view.events.mouseDownOnCell.attach((view, cell) => {
+        view.events.mouseDownOnCell.attach((_view, cell) => {
             if (!cell) return;
-            controller.dragHelper.start(cell.x, cell.y, controller.nextGuess(model.getGuessAt(cell.x, cell.y)));
-            controller.previewDragging();
+            this.dragHelper.start(cell.x, cell.y, this.nextGuess(model.getGuessAt(cell.x, cell.y)));
+            this.previewDragging();
         });
 
         view.events.mouseUp.attach(() => {
-            if (!controller.dragHelper.isDragging())
-                return;
-            controller.dragHelper.stop();
-            controller.cancelDraggingPreview();
-            controller.applyDragging();
+            if (!this.dragHelper.isDragging()) return;
+            this.dragHelper.stop();
+            this.cancelDraggingPreview();
+            this.applyDragging();
         });
 
-        view.events.mouseEntersCell.attach((view, cell) => {
+        view.events.mouseEntersCell.attach((_view, cell) => {
             if (!cell) return;
             view.highlightColumn(cell.x);
-            if (!controller.dragHelper.isDragging()) return;
+            if (!this.dragHelper.isDragging()) return;
 
-            controller.cancelDraggingPreview();
-            controller.dragHelper.to(cell.x, cell.y);
-            controller.previewDragging();
+            this.cancelDraggingPreview();
+            this.dragHelper.to(cell.x, cell.y);
+            this.previewDragging();
         });
 
-        view.events.mouseLeavesCell.attach((view, cell) => {
+        view.events.mouseLeavesCell.attach((_view, cell) => {
             if (!cell) return;
             view.unhighlightColumn(cell.x);
         });
@@ -114,9 +112,9 @@ export class Controller {
 
     private cancelDraggingPreview(): void {
         const model = this.model;
-        const view  = this.view;
+        const view = this.view;
 
-        this.dragHelper.iterateOverDraggedCells((x, y, guess) => {
+        this.dragHelper.iterateOverDraggedCells((x, y, _guess) => {
             view.setGuessAt(x, y, model.getGuessAt(x, y)!);
         });
     }

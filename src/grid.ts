@@ -30,7 +30,7 @@ export class Grid<T> {
         this.width = width;
         this.height = height;
         this.defaultValue = defaultValue; // Value to return for unset cells
-        this.data = new Array(width * height);
+        this.data = new Array(width * height) as (T | undefined)[];
     }
 
     // Get cell value at coordinates or index
@@ -43,7 +43,7 @@ export class Grid<T> {
         }
         const value = this.data[index];
         // Return default value for unset cells
-        return (value === undefined) ? this.defaultValue : value;
+        return value === undefined ? this.defaultValue : value;
     }
 
     // Set cell value at coordinates or index
@@ -96,7 +96,7 @@ export class Grid<T> {
 
     // Clear all cells (set to undefined)
     clear(): void {
-        this.data = new Array(this.width * this.height);
+        this.data = new Array(this.width * this.height) as (T | undefined)[];
     }
 
     // Clone the grid

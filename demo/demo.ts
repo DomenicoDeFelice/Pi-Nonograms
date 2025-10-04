@@ -3,12 +3,12 @@ import { Nonogram, GameMode, Srand } from '../src/main.js';
 let nonogram: Nonogram;
 
 const difficultyLabels: Record<number, string> = {
-    2: "very easy",
-    3: "easy",
-    4: "normal",
-    5: "medium",
-    6: "hard",
-    7: "very hard",
+    2: 'very easy',
+    3: 'easy',
+    4: 'normal',
+    5: 'medium',
+    6: 'hard',
+    7: 'very hard',
 };
 
 function densityFromDifficulty(difficulty: number): number {
@@ -16,9 +16,9 @@ function densityFromDifficulty(difficulty: number): number {
 }
 
 function playNonogram(nonogramId?: number): void {
-    const width  = (document.getElementById('width') as HTMLInputElement).value;
+    const width = (document.getElementById('width') as HTMLInputElement).value;
     const height = (document.getElementById('height') as HTMLInputElement).value;
-    const theme  = (document.getElementById('theme') as HTMLSelectElement).value;
+    const theme = (document.getElementById('theme') as HTMLSelectElement).value;
 
     // nonogramId is used as seed for the pseudo-random numbers
     // generator (same seed generates same nonogram).
@@ -32,14 +32,16 @@ function playNonogram(nonogramId?: number): void {
     (document.getElementById('nonogram_id') as HTMLInputElement).value = seed.toString();
 
     nonogram = new Nonogram(document.getElementById('nonogram')!, {
-        width:  parseInt(width),
+        width: parseInt(width),
         height: parseInt(height),
-        theme:  theme,
-        srand:  srand
+        theme: theme,
+        srand: srand,
     });
 
-    const difficulty = parseInt((document.getElementById('difficulty_slider') as HTMLInputElement).value);
-    const density    = densityFromDifficulty(difficulty);
+    const difficulty = parseInt(
+        (document.getElementById('difficulty_slider') as HTMLInputElement).value
+    );
+    const density = densityFromDifficulty(difficulty);
 
     nonogram.randomize({ density: density });
 }
@@ -51,15 +53,15 @@ function playSelectedNonogram(): void {
 }
 
 function drawNewNonogram(): void {
-    const width  = (document.getElementById('width') as HTMLInputElement).value;
+    const width = (document.getElementById('width') as HTMLInputElement).value;
     const height = (document.getElementById('height') as HTMLInputElement).value;
-    const theme  = (document.getElementById('theme') as HTMLSelectElement).value;
+    const theme = (document.getElementById('theme') as HTMLSelectElement).value;
 
     nonogram = new Nonogram(document.getElementById('nonogram')!, {
-        width:  parseInt(width),
+        width: parseInt(width),
         height: parseInt(height),
-        theme:  theme,
-        mode:   GameMode.DRAW
+        theme: theme,
+        mode: GameMode.DRAW,
     });
 
     nonogram.show();

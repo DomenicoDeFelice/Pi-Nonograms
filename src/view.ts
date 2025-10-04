@@ -50,8 +50,9 @@ export class View {
     private id: string;
 
     constructor(model: Model, container: string | HTMLElement) {
-        this.model      = model;
-        this.container  = typeof container === 'string' ? document.querySelector(container)! : container;
+        this.model = model;
+        this.container =
+            typeof container === 'string' ? document.querySelector(container)! : container;
 
         let id: string;
         do {
@@ -65,7 +66,7 @@ export class View {
             mouseDownOnCell: new Event<View, CellData | undefined>(this),
             mouseUp: new Event<View, undefined>(this),
             mouseEntersCell: new Event<View, CellData | undefined>(this),
-            mouseLeavesCell: new Event<View, CellData | undefined>(this)
+            mouseLeavesCell: new Event<View, CellData | undefined>(this),
         };
     }
 
@@ -93,7 +94,7 @@ export class View {
 
     highlightColumn(col: number): void {
         const cells = this.container.querySelectorAll('.nonogram_column_' + col + '_cell');
-        cells.forEach(cell => cell.classList.add('nonogram_hovered_column'));
+        cells.forEach((cell) => cell.classList.add('nonogram_hovered_column'));
 
         const colDef = document.getElementById(this.idOfColumnDefinition(col));
         if (colDef) {
@@ -103,7 +104,7 @@ export class View {
 
     unhighlightColumn(col: number): void {
         const cells = this.container.querySelectorAll('.nonogram_column_' + col + '_cell');
-        cells.forEach(cell => cell.classList.remove('nonogram_hovered_column'));
+        cells.forEach((cell) => cell.classList.remove('nonogram_hovered_column'));
 
         const colDef = document.getElementById(this.idOfColumnDefinition(col));
         if (colDef) {
@@ -133,11 +134,11 @@ export class View {
     }
 
     rebuildNonogram(): void {
-        const width  = this.model.width;
+        const width = this.model.width;
         const height = this.model.height;
         let x: number, y: number, tr: HTMLTableRowElement;
 
-        const table = this.nonogram = document.createElement('table');
+        const table = (this.nonogram = document.createElement('table'));
         table.id = this.id;
         table.classList.add('nonogram', this.theme);
 
@@ -208,7 +209,7 @@ export class View {
                 cell._cellData = {
                     x: x,
                     y: y,
-                    guess: this.model.getGuessAt(x, y)
+                    guess: this.model.getGuessAt(x, y),
                 };
                 tr.appendChild(cell);
             }
@@ -224,9 +225,7 @@ export class View {
     }
 
     // Private methods
-    private setupEventHandlers(target: HTMLTableElement): void{
-        const view = this;
-
+    private setupEventHandlers(target: HTMLTableElement): void {
         target.addEventListener('mousedown', (e: MouseEvent) => {
             if ((e.target as HTMLElement).tagName !== 'TD') return;
 
@@ -236,7 +235,7 @@ export class View {
             e.preventDefault();
 
             const cellData = (e.target as HTMLTableCellElementWithData)._cellData;
-            view.events.mouseDownOnCell.notify(cellData);
+            this.events.mouseDownOnCell.notify(cellData);
         });
 
         const mouseup_handler = () => {
@@ -244,11 +243,11 @@ export class View {
             if (!document.contains(target)) {
                 // If it has been removed, unbind this event handler
                 // from document to avoid memory leaks (the references
-                // to `view` and `target` make it impossible for the
+                // to `this` and `target` make it impossible for the
                 // garbage collector to free them).
                 document.removeEventListener('mouseup', mouseup_handler);
             } else {
-                view.events.mouseUp.notify(undefined);
+                this.events.mouseUp.notify(undefined);
             }
         };
         document.addEventListener('mouseup', mouseup_handler);
@@ -259,7 +258,7 @@ export class View {
             e.preventDefault();
 
             const cellData = (e.target as HTMLTableCellElementWithData)._cellData;
-            view.events.mouseEntersCell.notify(cellData);
+            this.events.mouseEntersCell.notify(cellData);
         });
 
         target.addEventListener('mouseout', (e: MouseEvent) => {
@@ -268,7 +267,7 @@ export class View {
             e.preventDefault();
 
             const cellData = (e.target as HTMLTableCellElementWithData)._cellData;
-            view.events.mouseLeavesCell.notify(cellData);
+            this.events.mouseLeavesCell.notify(cellData);
         });
     }
 
@@ -314,7 +313,7 @@ export class View {
     }
 
     private cssClassesForCell(x: number, y: number): string {
-        const cellGuess  = this.model.getGuessAt(x, y);
+        const cellGuess = this.model.getGuessAt(x, y);
         const actualCell = this.model.getCellAt(x, y);
 
         const classes: string[] = [];
@@ -333,7 +332,11 @@ export class View {
     private guessToCSSClass(guess: CellStateType | undefined): string {
         // Handle both constant values and legacy string values
         let guessValue = guess;
-        if (guess === CellState.UNKNOWN || guess === CellState.FILLED || guess === CellState.EMPTY) {
+        if (
+            guess === CellState.UNKNOWN ||
+            guess === CellState.FILLED ||
+            guess === CellState.EMPTY
+        ) {
             guessValue = guess;
         }
         return 'nonogram_' + guessValue + '_cell';

@@ -54,13 +54,16 @@ export class DefinitionCalculator {
             } else if (sequenceLength) {
                 sequenceEnd = i - 1;
                 sequenceSolved = this.isSequenceSolved(
-                    sequenceBegin!, sequenceEnd, length,
-                    guessCells, mode
+                    sequenceBegin!,
+                    sequenceEnd,
+                    length,
+                    guessCells,
+                    mode
                 );
 
                 definition.push({
                     length: sequenceLength,
-                    solved: sequenceSolved
+                    solved: sequenceSolved,
                 });
 
                 sequenceLength = 0;
@@ -71,13 +74,16 @@ export class DefinitionCalculator {
         if (sequenceLength) {
             sequenceEnd = length - 1;
             sequenceSolved = this.isSequenceSolved(
-                sequenceBegin!, sequenceEnd, length,
-                guessCells, mode
+                sequenceBegin!,
+                sequenceEnd,
+                length,
+                guessCells,
+                mode
             );
 
             definition.push({
                 length: sequenceLength,
-                solved: sequenceSolved
+                solved: sequenceSolved,
             });
         }
 
@@ -97,8 +103,8 @@ export class DefinitionCalculator {
         if (mode !== GameMode.PLAY) return false;
 
         // Check boundaries - sequence must be surrounded by empty cells
-        const leftBoundary = (begin === 0) || (guessCells[begin - 1] === CellState.EMPTY);
-        const rightBoundary = (end === lineLength - 1) || (guessCells[end + 1] === CellState.EMPTY);
+        const leftBoundary = begin === 0 || guessCells[begin - 1] === CellState.EMPTY;
+        const rightBoundary = end === lineLength - 1 || guessCells[end + 1] === CellState.EMPTY;
 
         if (!leftBoundary || !rightBoundary) return false;
 

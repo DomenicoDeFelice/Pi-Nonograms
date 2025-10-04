@@ -60,7 +60,10 @@ export class HintProvider {
     /**
      * Find the first error in the guess grid
      */
-    private findError(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
+    private findError(
+        actualGrid: Grid<CellStateType>,
+        guessGrid: Grid<CellStateType>
+    ): Hint | null {
         let hint: Hint | null = null;
 
         guessGrid.forEach((x, y, guessValue, index) => {
@@ -68,12 +71,14 @@ export class HintProvider {
 
             const actualValue = actualGrid.get(index);
 
-            if ((guessValue === CellState.FILLED && actualValue !== CellState.FILLED) ||
-                (guessValue === CellState.EMPTY && actualValue === CellState.FILLED)) {
+            if (
+                (guessValue === CellState.FILLED && actualValue !== CellState.FILLED) ||
+                (guessValue === CellState.EMPTY && actualValue === CellState.FILLED)
+            ) {
                 hint = {
                     x: x,
                     y: y,
-                    value: actualValue
+                    value: actualValue,
                 };
             }
         });
@@ -84,12 +89,15 @@ export class HintProvider {
     /**
      * Find a random unknown cell to reveal
      */
-    private findUnknownCell(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
+    private findUnknownCell(
+        actualGrid: Grid<CellStateType>,
+        guessGrid: Grid<CellStateType>
+    ): Hint | null {
         // First, check if there are any unknown cells at all
         const unknownCells: { x: number; y: number }[] = [];
         guessGrid.forEach((x, y, guessValue) => {
             if (guessValue === CellState.UNKNOWN) {
-                unknownCells.push({x: x, y: y});
+                unknownCells.push({ x: x, y: y });
             }
         });
 
@@ -105,7 +113,7 @@ export class HintProvider {
         return {
             x: cell.x,
             y: cell.y,
-            value: actualGrid.get(cell.x, cell.y)
+            value: actualGrid.get(cell.x, cell.y),
         };
     }
 }

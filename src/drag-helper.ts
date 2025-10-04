@@ -60,7 +60,7 @@ export class DragHelper {
         let fromX: number, toX: number, stepX: number;
         let fromY: number, toY: number, stepY: number;
 
-        if (Math.abs(x1-x2) > Math.abs(y1-y2)) {
+        if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
             // Horizontal Line
             stepX = 1;
             stepY = 0;

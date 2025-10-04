@@ -61,7 +61,7 @@ export class Model {
     private generator: NonogramGenerator;
 
     constructor(opts: ModelOptions) {
-        this.width  = opts.width;
+        this.width = opts.width;
         this.height = opts.height;
 
         // Initialize helper classes
@@ -78,7 +78,7 @@ export class Model {
             // The user solved the nonogram
             nonogramSolved: new Event<Model, undefined>(this),
             // The nonogram was solved but now it isn't
-            nonogramUnsolved: new Event<Model, undefined>(this)
+            nonogramUnsolved: new Event<Model, undefined>(this),
         };
 
         this.setupNonogram();
@@ -120,7 +120,7 @@ export class Model {
             x: actualX,
             y: actualY,
             oldGuess: oldGuess,
-            newGuess: guess
+            newGuess: guess,
         });
 
         if (this.mode === GameMode.PLAY) this.checkIfSolved();
@@ -170,7 +170,7 @@ export class Model {
 
         const hint = this.hintProvider.findHint(this.actual, this.guess);
         if (hint) {
-            this.setGuessAt(hint.x, hint.y, hint.value!);
+            this.setGuessAt(hint.x, hint.y, hint.value);
         }
     }
 
@@ -197,7 +197,7 @@ export class Model {
     // Private methods
     private setupNonogram(): void {
         this.actual = new Grid(this.width, this.height, CellState.EMPTY);
-        this.guess  = new Grid(this.width, this.height, CellState.UNKNOWN);
+        this.guess = new Grid(this.width, this.height, CellState.UNKNOWN);
         this.setUnsolved();
     }
 
@@ -221,8 +221,10 @@ export class Model {
         this.actual.forEach((x, y, actualValue) => {
             const guessValue = this.guess.get(x, y);
 
-            if ((actualValue === CellState.FILLED && guessValue !== CellState.FILLED) ||
-                (actualValue !== CellState.FILLED && guessValue === CellState.FILLED)) {
+            if (
+                (actualValue === CellState.FILLED && guessValue !== CellState.FILLED) ||
+                (actualValue !== CellState.FILLED && guessValue === CellState.FILLED)
+            ) {
                 solved = false;
             }
         });

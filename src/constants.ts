@@ -24,7 +24,7 @@
 export const CellState = {
     UNKNOWN: 'unknown',
     FILLED: 'filled',
-    EMPTY: 'empty'
+    EMPTY: 'empty',
 } as const;
 
 export type CellStateType = (typeof CellState)[keyof typeof CellState];
@@ -32,7 +32,7 @@ export type CellStateType = (typeof CellState)[keyof typeof CellState];
 // Game mode constants
 export const GameMode = {
     PLAY: 'play',
-    DRAW: 'draw'
+    DRAW: 'draw',
 } as const;
 
 export type GameModeType = (typeof GameMode)[keyof typeof GameMode];
