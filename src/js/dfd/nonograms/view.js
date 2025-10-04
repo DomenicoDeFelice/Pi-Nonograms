@@ -286,7 +286,13 @@ dfd.nonograms.View.prototype = {
     },
 
     _guessToCSSClass: function (guess) {
-        return 'nonogram_' + guess + '_cell';
+        var CellState = dfd.nonograms.CellState;
+        // Handle both constant values and legacy string values
+        var guessValue = guess;
+        if (guess === CellState.UNKNOWN || guess === CellState.FILLED || guess === CellState.EMPTY) {
+            guessValue = guess;
+        }
+        return 'nonogram_' + guessValue + '_cell';
     }
 };
 

@@ -86,12 +86,13 @@ dfd.nonograms.Controller.prototype = {
 
     // cycles in [unknown, filled, empty]
     _nextGuess: function (guess) {
-        if (guess === 'unknown') {
-            return 'filled';
-        } else if (guess === 'filled') {
-            return 'empty';
+        var CellState = dfd.nonograms.CellState;
+        if (guess === CellState.UNKNOWN) {
+            return CellState.FILLED;
+        } else if (guess === CellState.FILLED) {
+            return CellState.EMPTY;
         }
-        return 'unknown';
+        return CellState.UNKNOWN;
     },
 
     _previewDragging: function () {

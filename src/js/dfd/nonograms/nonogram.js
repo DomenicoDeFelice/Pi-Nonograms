@@ -65,7 +65,7 @@ dfd.nonograms.Nonogram = function (container, opts) {
 dfd.nonograms.Nonogram.options = {
     width:    10,
     height:   10,
-    mode:     'play',
+    mode:     dfd.nonograms.GameMode.PLAY,
     theme:    'classic',
     srand:    dfd.Srand,
     onSolved: function () {

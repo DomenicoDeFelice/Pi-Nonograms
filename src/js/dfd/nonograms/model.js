@@ -55,10 +55,23 @@ dfd.nonograms.Model = function (opts) {
 
 
 dfd.nonograms.Model.prototype = {
+    // Coordinate helper methods
+    _indexFromXY: function (x, y) {
+        return y * this.width + x;
+    },
+
+    _XYFromIndex: function (index) {
+        var width = this.width;
+        var y = Math.floor(index / width);
+        var x = index % width;
+        return [x, y];
+    },
+
     // Returns the state of a cell.
     // Arguments can be the x and y coordinates of the cell or
     // the index of the cell (second argument not passed)
     getCellAt: function (x, y) {
+        var CellState = dfd.nonograms.CellState;
         var index;
         if (y === undefined) {
             index = x;
@@ -67,10 +80,11 @@ dfd.nonograms.Model.prototype = {
         }
 
         var cell = this._actual[index];
-        return (cell === undefined) ? 'empty' : cell;
+        return (cell === undefined) ? CellState.EMPTY : cell;
     },
 
     getGuessAt: function (x, y) {
+        var CellState = dfd.nonograms.CellState;
         var index;
         if (y === undefined) {
             index = x;
@@ -79,7 +93,7 @@ dfd.nonograms.Model.prototype = {
         }
 
         var guess = this._guess[index];
-        return (guess === undefined) ? 'unknown' : guess;
+        return (guess === undefined) ? CellState.UNKNOWN : guess;
     },
 
     setGuessAt: function (x, y, guess) {
@@ -103,7 +117,8 @@ dfd.nonograms.Model.prototype = {
             newGuess: guess
         });
 
-        if (this._mode === 'play') this._checkIfSolved();
+        var GameMode = dfd.nonograms.GameMode;
+        if (this._mode === GameMode.PLAY) this._checkIfSolved();
     },
 
     getMode: function () {
@@ -111,11 +126,12 @@ dfd.nonograms.Model.prototype = {
     },
 
     setMode: function (mode) {
+        var GameMode = dfd.nonograms.GameMode;
         if (mode === this._mode) return;
 
         this._mode = mode;
 
-        if (mode === 'draw') {
+        if (mode === GameMode.DRAW) {
             this._guess = this._actual;
         } else {
             var nCells = this.width * this.height;
@@ -131,75 +147,29 @@ dfd.nonograms.Model.prototype = {
     },
 
     getRowDefinition: function (row) {
-        var definition = [];
-
-        var sequenceBegin;
-        var sequenceEnd;
-        var sequenceSolved;
-        var sequenceLength = 0;
-
-        var mode = this._mode;
-
-        for (var x = 0; x < this.width; x++) {
-            if (this.getCellAt(x, row) === 'filled') {
-                if (sequenceLength === 0) sequenceBegin = x;
-                sequenceLength++;
-            } else if (sequenceLength) {
-                sequenceEnd = x-1;
-
-                sequenceSolved = false;
-
-                if (mode === 'play') {
-                    if ((sequenceBegin === 0 || this.getGuessAt(sequenceBegin-1, row) === 'empty')
-                        && (sequenceEnd === this.width-1 || this.getGuessAt(sequenceEnd+1, row) === 'empty')) {
-
-                        sequenceSolved = true;
-                        for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                            if (this.getGuessAt(index, row) !== 'filled') {
-                                sequenceSolved = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                definition.push({
-                    length: sequenceLength,
-                    solved: sequenceSolved
-                });
-
-                sequenceLength = 0;
-            }
-        }
-
-        if (sequenceLength) {
-            sequenceEnd = x-1;
-
-            sequenceSolved = false;
-
-            if (mode === 'play') {
-                if ((sequenceBegin === 0             ||  this.getGuessAt(sequenceBegin-1, row) === 'empty') &&
-                    (sequenceEnd   === this.width-1  ||  this.getGuessAt(sequenceEnd+1,   row) === 'empty')) {
-
-                    sequenceSolved = true;
-                    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                        if (this.getGuessAt(index, row) !== 'filled') {
-                            sequenceSolved = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            definition.push({
-                length: sequenceLength,
-                solved: sequenceSolved
-            });
-        }
-        return definition;
+        var model = this;
+        return this._getLineDefinition(
+            this.width,
+            function(i) { return model.getCellAt(i, row); },
+            function(i) { return model.getGuessAt(i, row); },
+            function(i) { return i === 0 || i === model.width - 1; }
+        );
     },
 
     getColumnDefinition: function (col) {
+        var model = this;
+        return this._getLineDefinition(
+            this.height,
+            function(i) { return model.getCellAt(col, i); },
+            function(i) { return model.getGuessAt(col, i); },
+            function(i) { return i === 0 || i === model.height - 1; }
+        );
+    },
+
+    // Private helper to eliminate duplication between row and column definition logic
+    _getLineDefinition: function (length, getCellFn, getGuessFn, isEdgeFn) {
+        var CellState = dfd.nonograms.CellState;
+        var GameMode = dfd.nonograms.GameMode;
         var definition = [];
 
         var sequenceBegin;
@@ -209,22 +179,21 @@ dfd.nonograms.Model.prototype = {
 
         var mode = this._mode;
 
-        for (var y = 0; y < this.height; y++) {
-            if (this.getCellAt(col, y) === 'filled') {
-                if (sequenceLength === 0) sequenceBegin = y;
+        for (var i = 0; i < length; i++) {
+            if (getCellFn(i) === CellState.FILLED) {
+                if (sequenceLength === 0) sequenceBegin = i;
                 sequenceLength++;
             } else if (sequenceLength) {
-                sequenceEnd = y-1;
-
+                sequenceEnd = i - 1;
                 sequenceSolved = false;
 
-                if (mode === 'play') {
-                    if ((sequenceBegin === 0              ||  this.getGuessAt(col, sequenceBegin-1) === 'empty') &&
-                        (sequenceEnd   === this.height-1  ||  this.getGuessAt(col, sequenceEnd+1)   === 'empty')) {
+                if (mode === GameMode.PLAY) {
+                    if ((isEdgeFn(sequenceBegin) || getGuessFn(sequenceBegin - 1) === CellState.EMPTY) &&
+                        (isEdgeFn(sequenceEnd) || getGuessFn(sequenceEnd + 1) === CellState.EMPTY)) {
 
                         sequenceSolved = true;
                         for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                            if (this.getGuessAt(col, index) !== 'filled') {
+                            if (getGuessFn(index) !== CellState.FILLED) {
                                 sequenceSolved = false;
                                 break;
                             }
@@ -241,18 +210,18 @@ dfd.nonograms.Model.prototype = {
             }
         }
 
+        // Handle sequence that extends to the end of the line
         if (sequenceLength) {
-            sequenceEnd = y-1;
-
+            sequenceEnd = i - 1;
             sequenceSolved = false;
 
-            if (mode === 'play') {
-                if ((sequenceBegin === 0              ||  this.getGuessAt(col, sequenceBegin-1) === 'empty') &&
-                    (sequenceEnd   === this.height-1  ||  this.getGuessAt(col, sequenceEnd+1)   === 'empty')) {
+            if (mode === GameMode.PLAY) {
+                if ((isEdgeFn(sequenceBegin) || getGuessFn(sequenceBegin - 1) === CellState.EMPTY) &&
+                    (isEdgeFn(sequenceEnd) || getGuessFn(sequenceEnd + 1) === CellState.EMPTY)) {
 
                     sequenceSolved = true;
                     for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                        if (this.getGuessAt(col, index) !== 'filled') {
+                        if (getGuessFn(index) !== CellState.FILLED) {
                             sequenceSolved = false;
                             break;
                         }
@@ -270,8 +239,11 @@ dfd.nonograms.Model.prototype = {
     },
 
     giveHint: function () {
+        var CellState = dfd.nonograms.CellState;
+        var GameMode = dfd.nonograms.GameMode;
+
         // Is there any hint to give?
-        if (this.isSolved() || this._mode !== 'play') return;
+        if (this.isSolved() || this._mode !== GameMode.PLAY) return;
 
         // Let's first check for errors
         var nCells = this.width * this.height;
@@ -279,8 +251,8 @@ dfd.nonograms.Model.prototype = {
         var guess  = this._guess;
         var xy, x, y;
         for (var index=nCells; index--; ) {
-            if ((guess[index] === 'filled' && actual[index] !== 'filled') ||
-                (guess[index] === 'empty'  && actual[index] === 'filled')) {
+            if ((guess[index] === CellState.FILLED && actual[index] !== CellState.FILLED) ||
+                (guess[index] === CellState.EMPTY  && actual[index] === CellState.FILLED)) {
                 // Error found, correct it
                 xy = this._XYFromIndex(index);
                 x = xy[0];
@@ -295,13 +267,16 @@ dfd.nonograms.Model.prototype = {
             xy = this._getRandomXY();
             x = xy[0];
             y = xy[1];
-        } while (this.getGuessAt(x, y) !== 'unknown')
+        } while (this.getGuessAt(x, y) !== CellState.UNKNOWN)
         this.setGuessAt(x, y, this.getCellAt(x, y));
     },
 
     randomize: function (density) {
+        var CellState = dfd.nonograms.CellState;
+        var GameMode = dfd.nonograms.GameMode;
+
         this._setupNonogram();
-        this._mode = 'play';
+        this._mode = GameMode.PLAY;
 
         var actual = this._actual;
         var nCells = this.width * this.height;
@@ -312,7 +287,7 @@ dfd.nonograms.Model.prototype = {
         while (toBeFilled) {
             index = this._getRandomIndex();
             if (actual[index] === undefined) {
-                actual[index] = 'filled';
+                actual[index] = CellState.FILLED;
                 toBeFilled--;
             }
         }
@@ -321,10 +296,11 @@ dfd.nonograms.Model.prototype = {
     },
 
     resetGuesses: function () {
+        var GameMode = dfd.nonograms.GameMode;
         var nCells = this.width * this.height;
 
         this._guess = new Array(nCells);
-        if (this._mode === 'draw') {
+        if (this._mode === GameMode.DRAW) {
             this._actual = this._guess;
         }
 
@@ -340,17 +316,6 @@ dfd.nonograms.Model.prototype = {
         this._actual = new Array(nCells);
         this._guess  = new Array(nCells);
         this._setUnsolved();
-    },
-
-    _indexFromXY: function (x, y) {
-        return y * this.width + x;
-    },
-
-    _XYFromIndex: function (index) {
-        var width = this.width;
-        var y = Math.floor(index / width);
-        var x = index % width;
-        return [x, y];
     },
 
     _getRandomIndex: function () {
@@ -379,12 +344,13 @@ dfd.nonograms.Model.prototype = {
     },
 
     _checkIfSolved: function () {
+        var CellState = dfd.nonograms.CellState;
         var actual = this._actual;
         var guess  = this._guess;
 
         for (var index = actual.length; index--; ) {
-            if ((actual[index] === 'filled' && guess[index] !== 'filled') ||
-                (actual[index] !== 'filled' && guess[index] === 'filled')) {
+            if ((actual[index] === CellState.FILLED && guess[index] !== CellState.FILLED) ||
+                (actual[index] !== CellState.FILLED && guess[index] === CellState.FILLED)) {
                 this._setUnsolved();
                 return;
             }

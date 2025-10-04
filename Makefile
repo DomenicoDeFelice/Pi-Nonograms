@@ -1,4 +1,4 @@
-src_files = src/js/jsrand.min.js src/js/dfd/event.js src/js/dfd/nonograms/drag_helper.js src/js/dfd/nonograms/model.js src/js/dfd/nonograms/view.js src/js/dfd/nonograms/controller.js src/js/dfd/nonograms/nonogram.js
+src_files = src/js/jsrand.min.js src/js/dfd/event.js src/js/dfd/nonograms/constants.js src/js/dfd/nonograms/drag_helper.js src/js/dfd/nonograms/model.js src/js/dfd/nonograms/view.js src/js/dfd/nonograms/controller.js src/js/dfd/nonograms/nonogram.js
 
 all:	minify
 

@@ -57,7 +57,7 @@ function drawNewNonogram() {
         width:  width,
         height: height,
         theme:  theme,
-        mode:   "draw"
+        mode:   dfd.nonograms.GameMode.DRAW
     });
 
     nonogram.show();
