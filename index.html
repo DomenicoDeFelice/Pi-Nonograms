@@ -32,28 +32,56 @@
     <div id="demo">
       <div id="nonogram"></div>
       <hr>
-      <div class="control"><label for="width">Width</label><input type="text" id="width" value="10" size="3"></div>
-      <div class="control"><label for="height">Height</label><input type="text" id="height" value="10" size="3"></div>
-      <div class="control"><label for="difficulty_slider">Difficulty</label><input type="range" id="difficulty_slider" min="2" max="7" value="4" step="1"><span id="difficulty_label"></span></div>
-      <div class="control"><label for="theme">Theme</label>
-	<select id="theme">
-	  <option value="classic">Classic</option>
-	  <option value="paper">Paper</option>
-	  <option value="koala">Koala</option>
-	  <option value="small">Small</option>
-	</select>
+      <div class="controls">
+        <div>
+          <label for="width">Width</label>
+          <input id="width" type="number" value="10" min="2" max="100" />
+        </div>
+        <div>
+          <label for="height">Height</label>
+          <input id="height" type="number" value="10" min="2" max="100" />
+        </div>
+        <div>
+          <label for="difficulty_slider">Difficulty</label>
+          <input
+            id="difficulty_slider"
+            type="range"
+            min="2"
+            max="7"
+            value="4"
+          />
+          <div id="difficulty_label"></div>
+        </div>
+        <div>
+          <label for="theme">Theme</label>
+          <select id="theme">
+            <option value="classic">Classic</option>
+            <option value="paper">Paper</option>
+            <option value="koala">Koala</option>
+            <option value="small">Small</option>
+          </select>
+        </div>
       </div>
-      <div id="buttons">
-	<div class="control"><button id="play"><span class="button_label">New puzzle</span></button></div>
-	<div class="control"><button id="give_hint"><span class="button_label">Give hint</span></button></div>
-	<div class="control"><button id="start_over"><span class="button_label">Start over</span></button></div>
-	<div class="control"><button id="draw_nonogram"><span class="button_label">Draw your nonogram</span></button></div>
-	<div class="control"><button id="play_by_id"><span class="button_label">Play #</span></button><input type="text" id="nonogram_id" value="" size="8"></div>
+      <div class="controls">
+        <div>
+          <button id="play">New game</button>
+        </div>
+        <div>
+          <button id="give_hint">Give hint</button>
+        </div>
+        <div>
+          <button id="start_over">Start over</button>
+        </div>
+        <div>
+          <button id="draw_nonogram">Draw your nonogram</button>
+        </div>
+        <div>
+          <button id="play_by_id"><span class="button_label">Play #</span></button>
+          <input type="text" id="nonogram_id" value="" size="8">
+        </div>
       </div>
     </div>
-
     <div class="vspacer"></div>
-
     <div id="disqus_thread"></div>
     <script type="text/javascript">
       var disqus_shortname = "pinonograms";

@@ -13,7 +13,7 @@ body {
     background: -ms-radial-gradient(center, ellipse cover, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
     background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%,rgba(109,109,109,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#6d6d6d',GradientType=1 );
-
+    background-attachment: fixed;
     text-align: center;
 }
 
@@ -45,7 +45,6 @@ h1 {
 
 #demo {
     display: inline-block;
-    *display: inline;
     zoom: 1;
     margin-top: 20px;
     text-align: left;
@@ -62,39 +61,44 @@ h1 {
     border-radius: 5px;
 }
 
-.control {
-    margin: 0 5px 0 0;
-    float: left;
-    padding: 0 5px;
-    text-align: center;
-    width: 75px;
+.controls {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+  width: 100%;
 }
 
-.control label {
-    font-weight: bolder;
-    display: block;
+.controls > * {
+  margin: 0 4px;
 }
 
-#buttons {
-    float: left;
+.controls label {
+  display: block;
 }
 
-#buttons .control {
-    float: none;
-    display: block;
-    width: 100px;
+.controls label,
+.controls button {
+  font-weight: bolder;
+  text-align: center;
 }
 
-.button_label {
-    font-weight: bolder;
+.nonogram {
+    margin: 0 auto;
 }
 
 #play {
     background-color: #00cc00;
 }
 
+#width,
+#height,
 #nonogram_id {
-    background-color: #FFFFB5;
+  background-color: #ffffb5;
+  text-align: right;
+}
+
+#nonogram_id {
+    background-color: #ffffb5;
     text-align: right;
 }
 
