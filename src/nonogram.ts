@@ -122,8 +122,4 @@ export class Nonogram {
     setMode(mode: GameModeType): void {
         this.model.setMode(mode);
     }
-
-    showGameState(): void {
-        //alert(this.model.getGameState());
-    }
 }
