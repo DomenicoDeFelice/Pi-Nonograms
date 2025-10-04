@@ -1,7 +1,10 @@
 /*
-  Koala Nonograms theme resembling paper
-  Copyright (C) 2013 Domenico De Felice
-  http://domenicodefelice.blogspot.com
+  Pi Nonograms theme resembling paper
+  https://github.com/DomenicoDeFelice/Pi-Nonograms
+
+  Play the game: https://domdefelice.net/pi-nonograms/
+
+  Copyright (c) 2013-2025 Domenico De Felice
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,173 +21,126 @@
 */
 
 table.nonogram.paper {
+    --paper-color-text: #000f55;
+    --paper-color-border: #000f55;
+    --paper-color-hover-def: #cccccc;
+    --paper-color-hover-cell: #dddddd;
+    --paper-color-solved-sequence: #aaaaaa;
+    --paper-opacity-hover: 0.5;
+    --paper-opacity-filled-hover: 0.8;
+    --paper-size-cell: 30px;
+    --paper-size-definition: 50px;
+    --paper-font-size: 18px;
+
     font-family: sans-serif;
     border-spacing: 0;
     border-collapse: collapse;
     empty-cells: show;
-    /*
-      Image credits to:
-      http://bgfons.com/download/278
-    */
-    background-image: url("paper.jpg");
+    background-image: url('paper.jpg');
     background-position: top left;
     background-repeat: no-repeat;
 }
 
-table.nonogram.paper.nonogram_solved {
+table.nonogram.paper {
+    & td.nonogram_column_definition.nonogram_hovered_column,
+    & tr.nonogram_row:hover td.nonogram_row_definition {
+        background-color: var(--paper-color-hover-def);
+    }
+
+    &.nonogram_playing td.nonogram_cell {
+        cursor: pointer;
+        padding: 0;
+        width: var(--paper-size-cell);
+        height: var(--paper-size-cell);
+        border: thin solid var(--paper-color-border);
+    }
+
+    &.nonogram_solved td.nonogram_cell {
+        padding: 0;
+        width: var(--paper-size-cell);
+        height: var(--paper-size-cell);
+        border: thin solid transparent;
+    }
+
+    & td.nonogram_definition {
+        font-size: var(--paper-font-size);
+        color: var(--paper-color-text);
+
+        & .nonogram_solved_sequence {
+            color: var(--paper-color-solved-sequence);
+            font-weight: normal;
+            text-decoration: line-through;
+        }
+    }
+
+    & td.nonogram_row_definition {
+        text-align: right;
+        min-width: var(--paper-size-definition);
+        padding-right: 10px;
+    }
+
+    & td.nonogram_column_definition {
+        text-align: center;
+        vertical-align: bottom;
+        height: var(--paper-size-definition);
+        padding-bottom: 5px;
+    }
+
+    &.nonogram_playing tr.nonogram_separation_row td {
+        height: 1px;
+        background-color: var(--paper-color-border);
+    }
+
+    &.nonogram_playing td.nonogram_separation_column {
+        width: 1px;
+        background-color: var(--paper-color-border);
+    }
+
+    &.nonogram_solved tr.nonogram_separation_row td,
+    &.nonogram_solved td.nonogram_separation_column {
+        opacity: 0;
+    }
 }
 
-table.nonogram.paper td.nonogram_column_definition.nonogram_hovered_column,
-table.nonogram.paper tr.nonogram_row:hover td.nonogram_row_definition  {
-    background-color: #cccccc;
+/* Unknown cells */
+table.nonogram.paper {
+    &.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell,
+    &.nonogram_solved tr.nonogram_row:hover td.nonogram_unknown_cell,
+    &.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column,
+    &.nonogram_solved td.nonogram_unknown_cell.nonogram_hovered_column {
+        background-color: var(--paper-color-hover-cell);
+        opacity: var(--paper-opacity-hover);
+    }
 }
 
-table.nonogram.paper.nonogram_playing td.nonogram_cell {
-    cursor: pointer;
+/* Filled cells */
+table.nonogram.paper {
+    &.nonogram_playing td.nonogram_filled_cell,
+    &.nonogram_solved td.nonogram_filled_cell {
+        background-image: url('filled.png');
+        background-repeat: no-repeat;
+    }
+
+    &.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell,
+    &.nonogram_solved tr.nonogram_row:hover td.nonogram_filled_cell,
+    &.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column,
+    &.nonogram_solved td.nonogram_filled_cell.nonogram_hovered_column {
+        opacity: var(--paper-opacity-filled-hover);
+    }
 }
 
-table.nonogram.paper td.nonogram_definition {
-    font-size: 18px;
-    color: #000F55;
-}
+/* Empty cells */
+table.nonogram.paper {
+    &.nonogram_playing td.nonogram_empty_cell,
+    &.nonogram_solved td.nonogram_empty_cell {
+        background-image: url('empty.png');
+        background-repeat: no-repeat;
+    }
 
-table.nonogram.paper td.nonogram_definition .nonogram_solved_sequence {
-    color: #aaaaaa;
-    font-weight: normal;
-    text-decoration: line-through;
-}
-
-table.nonogram.paper td.nonogram_row_definition {
-    text-align: right;
-    min-width: 50px;
-    padding-right: 10px;
-}
-
-table.nonogram.paper td.nonogram_column_definition {
-    text-align: center;
-    vertical-align: bottom;
-    height: 50px;
-    padding-bottom: 5px;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_cell {
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    border: thin solid #000F55;
-}
-
-table.nonogram.paper.nonogram_solved td.nonogram_cell {
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    border: thin solid transparent;
-}
-
-table.nonogram.paper.nonogram_playing tr.nonogram_separation_row td {
-    height: 1px;
-    background-color: #000F55;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_separation_column {
-    width: 1px;
-    background-color: #000F55;
-}
-
-table.nonogram.paper.nonogram_solved tr.nonogram_separation_row td {
-    opacity: 0;
-}
-
-table.nonogram.paper.nonogram_solved td.nonogram_separation_column{
-    opacity: 0;
-}
-
-
-/*
-              _                              
-             | |                             
-  _   _ _ __ | | ___ __   _____      ___ __  
- | | | | '_ \| |/ / '_ \ / _ \ \ /\ / / '_ \ 
- | |_| | | | |   <| | | | (_) \ V  V /| | | |
-  \__,_|_| |_|_|\_\_| |_|\___/ \_/\_/ |_| |_|
-
-*/
-
-table.nonogram.paper.nonogram_playing td.nonogram_unknown_cell,
-table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell {
-}
-
-table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_unknown_cell,
-table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_unknown_cell {
-    background-color: #dddddd;
-    opacity: 0.5;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_unknown_cell.nonogram_hovered_column,
-table.nonogram.paper.nonogram_solved td.nonogram_unknown_cell.nonogram_hovered_column {
-    background-color: #dddddd;
-    opacity: 0.5;
-}
-
-/*
-   __ _ _ _          _ 
-  / _(_) | |        | |
- | |_ _| | | ___  __| |
- |  _| | | |/ _ \/ _` |
- | | | | | |  __/ (_| |
- |_| |_|_|_|\___|\__,_|                     
-
- */                       
-					  
-table.nonogram.paper.nonogram_playing td.nonogram_filled_cell,
-table.nonogram.paper.nonogram_solved td.nonogram_filled_cell{
-    background-image: url("filled.png");
-    background-repeat: no-repeat;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_correct_guess,
-table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_correct_guess {
-}
-
-table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_filled_cell,
-table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_filled_cell{
-    opacity: 0.8;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_filled_cell.nonogram_hovered_column,
-table.nonogram.paper.nonogram_solved td.nonogram_filled_cell.nonogram_hovered_column {
-    opacity: 0.8;
-}
-
-
-/*
-                       _         
-                      | |        
-   ___ _ __ ___  _ __ | |_ _   _ 
-  / _ \ '_ ` _ \| '_ \| __| | | |
- |  __/ | | | | | |_) | |_| |_| |
-  \___|_| |_| |_| .__/ \__|\__, |
-                | |         __/ |
-                |_|        |___/ 
-
-*/
-
-table.nonogram.paper.nonogram_playing td.nonogram_empty_cell,
-table.nonogram.paper.nonogram_solved td.nonogram_empty_cell {
-    background-image: url("empty.png");
-    background-repeat: no-repeat;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_correct_guess,
-table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_correct_guess {
-}
-
-table.nonogram.paper.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell,
-table.nonogram.paper.nonogram_solved tr.nonogram_row:hover td.nonogram_empty_cell {
-    opacity: 0.8;
-}
-
-table.nonogram.paper.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column,
-table.nonogram.paper.nonogram_solved td.nonogram_empty_cell.nonogram_hovered_column {
-    opacity: 0.8;
+    &.nonogram_playing tr.nonogram_row:hover td.nonogram_empty_cell,
+    &.nonogram_solved tr.nonogram_row:hover td.nonogram_empty_cell,
+    &.nonogram_playing td.nonogram_empty_cell.nonogram_hovered_column,
+    &.nonogram_solved td.nonogram_empty_cell.nonogram_hovered_column {
+        opacity: var(--paper-opacity-filled-hover);
+    }
 }
