@@ -20,12 +20,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Event } from '../event.js';
+import { Event } from './event.js';
 import { Grid } from './grid.js';
 import { CellState, GameMode } from './constants.js';
-import { DefinitionCalculator } from './definition_calculator.js';
-import { HintProvider } from './hint_provider.js';
-import { NonogramGenerator } from './nonogram_generator.js';
+import { DefinitionCalculator } from './definition-calculator.js';
+import { HintProvider } from './hint-provider.js';
+import { NonogramGenerator } from './nonogram-generator.js';
 
 export class Model {
     constructor(opts) {

@@ -1,4 +1,4 @@
-import { Nonogram, GameMode } from '../src/js/main.js';
+import { Nonogram, GameMode } from '../src/main.js';
 
 // jQuery and Srand are loaded as globals from CDN
 const $ = window.jQuery;

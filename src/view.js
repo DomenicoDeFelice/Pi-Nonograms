@@ -20,7 +20,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Event } from '../event.js';
+import { Event } from './event.js';
 import { CellState } from './constants.js';
 
 // jQuery ($) is used as a global - it's loaded separately

@@ -21,7 +21,7 @@
 */
 
 import { CellState } from './constants.js';
-import { DragHelper } from './drag_helper.js';
+import { DragHelper } from './drag-helper.js';
 
 export class Controller {
     constructor(model, view) {

@@ -21,14 +21,14 @@
 */
 
 // Main entry point - exports all public APIs
-export { Event } from './dfd/event.js';
-export { CellState, GameMode } from './dfd/nonograms/constants.js';
-export { Grid } from './dfd/nonograms/grid.js';
-export { DefinitionCalculator } from './dfd/nonograms/definition_calculator.js';
-export { HintProvider } from './dfd/nonograms/hint_provider.js';
-export { NonogramGenerator } from './dfd/nonograms/nonogram_generator.js';
-export { DragHelper } from './dfd/nonograms/drag_helper.js';
-export { Model } from './dfd/nonograms/model.js';
-export { View } from './dfd/nonograms/view.js';
-export { Controller } from './dfd/nonograms/controller.js';
-export { Nonogram } from './dfd/nonograms/nonogram.js';
+export { CellState, GameMode } from './constants.js';
+export { Event } from './event.js';
+export { Grid } from './grid.js';
+export { DefinitionCalculator } from './definition-calculator.js';
+export { HintProvider } from './hint-provider.js';
+export { NonogramGenerator } from './nonogram-generator.js';
+export { DragHelper } from './drag-helper.js';
+export { Model } from './model.js';
+export { View } from './view.js';
+export { Controller } from './controller.js';
+export { Nonogram } from './nonogram.js';
