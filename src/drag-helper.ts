@@ -20,12 +20,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export class DragHelper {
-    constructor() {
-        this._dragging = false;
-    }
+import { CellStateType } from './constants.js';
 
-    start(x, y, guess) {
+export class DragHelper {
+    private _dragging: boolean = false;
+    private _x1!: number;
+    private _y1!: number;
+    private _x2!: number;
+    private _y2!: number;
+    private _guess!: CellStateType;
+
+    start(x: number, y: number, guess: CellStateType): void {
         this._x1 = this._x2 = x;
         this._y1 = this._y2 = y;
         this._guess = guess;
@@ -33,26 +38,27 @@ export class DragHelper {
         this._dragging = true;
     }
 
-    to(x, y) {
+    to(x: number, y: number): void {
         this._x2 = x;
         this._y2 = y;
     }
 
-    stop() {
+    stop(): void {
         this._dragging = false;
     }
 
-    isDragging() {
+    isDragging(): boolean {
         return this._dragging;
     }
 
-    iterateOverDraggedCells(fn) {
+    iterateOverDraggedCells(fn: (x: number, y: number, guess: CellStateType) => void): void {
         const x1 = this._x1;
         const y1 = this._y1;
         const x2 = this._x2;
         const y2 = this._y2;
 
-        let fromX, toX, stepX, fromY, toY, stepY;
+        let fromX: number, toX: number, stepX: number;
+        let fromY: number, toY: number, stepY: number;
 
         if (Math.abs(x1-x2) > Math.abs(y1-y2)) {
             // Horizontal Line

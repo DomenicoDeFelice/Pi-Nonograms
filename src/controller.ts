@@ -20,11 +20,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CellState } from './constants.js';
+import { CellState, CellStateType } from './constants.js';
 import { DragHelper } from './drag-helper.js';
+import { Model } from './model.js';
+import { View } from './view.js';
 
 export class Controller {
-    constructor(model, view) {
+    private _dragHelper: DragHelper;
+    private _model: Model;
+    private _view: View;
+
+    constructor(model: Model, view: View) {
         this._dragHelper = new DragHelper();
 
         this._model = model;
@@ -49,6 +55,7 @@ export class Controller {
         });
 
         view.events.mouseDownOnCell.attach((view, cell) => {
+            if (!cell) return;
             controller._dragHelper.start(cell.x, cell.y, controller._nextGuess(model.getGuessAt(cell.x, cell.y)));
             controller._previewDragging();
         });
@@ -62,6 +69,7 @@ export class Controller {
         });
 
         view.events.mouseEntersCell.attach((view, cell) => {
+            if (!cell) return;
             view.highlightColumn(cell.x);
             if (!controller._dragHelper.isDragging()) return;
 
@@ -71,6 +79,7 @@ export class Controller {
         });
 
         view.events.mouseLeavesCell.attach((view, cell) => {
+            if (!cell) return;
             view.unhighlightColumn(cell.x);
         });
     }
@@ -78,7 +87,7 @@ export class Controller {
     // Private methods
 
     // cycles in [unknown, filled, empty]
-    _nextGuess(guess) {
+    private _nextGuess(guess: CellStateType | undefined): CellStateType {
         if (guess === CellState.UNKNOWN) {
             return CellState.FILLED;
         } else if (guess === CellState.FILLED) {
@@ -87,7 +96,7 @@ export class Controller {
         return CellState.UNKNOWN;
     }
 
-    _previewDragging() {
+    private _previewDragging(): void {
         const view = this._view;
 
         this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
@@ -95,7 +104,7 @@ export class Controller {
         });
     }
 
-    _applyDragging() {
+    private _applyDragging(): void {
         const model = this._model;
 
         this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
@@ -103,12 +112,12 @@ export class Controller {
         });
     }
 
-    _cancelDraggingPreview() {
+    private _cancelDraggingPreview(): void {
         const model = this._model;
         const view  = this._view;
 
         this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
-            view.setGuessAt(x, y, model.getGuessAt(x, y));
+            view.setGuessAt(x, y, model.getGuessAt(x, y)!);
         });
     }
 }

@@ -6,8 +6,6 @@
 
   Copyright (c) 2013-2025 Domenico De Felice
 
-  @license
-
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -22,19 +20,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export class Event {
-    constructor(sender) {
-        this._sender = sender;
-        this._listeners = [];
-    }
+// Cell state constants
+export const CellState = {
+    UNKNOWN: 'unknown',
+    FILLED: 'filled',
+    EMPTY: 'empty'
+} as const;
 
-    attach(listener) {
-        this._listeners.push(listener);
-    }
+export type CellStateType = (typeof CellState)[keyof typeof CellState];
 
-    notify(args) {
-        for (let index = 0, nListeners = this._listeners.length; index < nListeners; index++) {
-            this._listeners[index](this._sender, args);
-        }
-    }
-}
+// Game mode constants
+export const GameMode = {
+    PLAY: 'play',
+    DRAW: 'draw'
+} as const;
+
+export type GameModeType = (typeof GameMode)[keyof typeof GameMode];

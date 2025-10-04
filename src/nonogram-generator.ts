@@ -20,29 +20,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CellState } from './constants.js';
+import { CellState, CellStateType } from './constants.js';
+import { Grid } from './grid.js';
+import type Srand from 'seeded-rand';
 
 /**
  * Generates random nonogram puzzles.
  */
 export class NonogramGenerator {
-    constructor(srand) {
+    private _srand: Srand;
+
+    constructor(srand: Srand) {
         this._srand = srand;
     }
 
     /**
      * Generate a random nonogram by filling cells based on density
      *
-     * @param {Grid} grid - Empty grid to populate
-     * @param {number} density - Proportion of cells to fill (0.0 to 1.0)
+     * @param grid - Empty grid to populate
+     * @param density - Proportion of cells to fill (0.0 to 1.0)
      */
-    generate(grid, density) {
+    generate(grid: Grid<CellStateType>, density: number): void {
         const nCells = grid.size();
         let toBeFilled = Math.floor(nCells * density);
 
         if (toBeFilled > nCells) toBeFilled = nCells;
 
-        let index;
+        let index: number;
         while (toBeFilled) {
             index = this._srand.intInRange(0, nCells - 1);
             // Check if cell is empty (not yet filled)

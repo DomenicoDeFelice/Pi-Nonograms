@@ -20,7 +20,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CellState, GameMode } from './constants.js';
+import { CellState, CellStateType, GameMode, GameModeType } from './constants.js';
+
+export interface LineDefinition {
+    length: number;
+    solved: boolean;
+}
 
 /**
  * Calculates row/column definitions (clue numbers).
@@ -28,18 +33,18 @@ import { CellState, GameMode } from './constants.js';
 export class DefinitionCalculator {
     /**
      * Calculate definition for a line (row or column)
-     * @param {Array} actualCells - Array of actual cell states for the line
-     * @param {Array} guessCells - Array of guess cell states for the line
-     * @param {string} mode - Current game mode (PLAY or DRAW)
-     * @returns {Array} Array of {length, solved} objects
      */
-    calculateLineDefinition(actualCells, guessCells, mode) {
-        const definition = [];
+    calculateLineDefinition(
+        actualCells: (CellStateType | undefined)[],
+        guessCells: (CellStateType | undefined)[],
+        mode: GameModeType
+    ): LineDefinition[] {
+        const definition: LineDefinition[] = [];
         const length = actualCells.length;
 
-        let sequenceBegin;
-        let sequenceEnd;
-        let sequenceSolved;
+        let sequenceBegin: number;
+        let sequenceEnd: number;
+        let sequenceSolved: boolean;
         let sequenceLength = 0;
 
         for (let i = 0; i < length; i++) {
@@ -49,7 +54,7 @@ export class DefinitionCalculator {
             } else if (sequenceLength) {
                 sequenceEnd = i - 1;
                 sequenceSolved = this._isSequenceSolved(
-                    sequenceBegin, sequenceEnd, length,
+                    sequenceBegin!, sequenceEnd, length,
                     guessCells, mode
                 );
 
@@ -66,7 +71,7 @@ export class DefinitionCalculator {
         if (sequenceLength) {
             sequenceEnd = length - 1;
             sequenceSolved = this._isSequenceSolved(
-                sequenceBegin, sequenceEnd, length,
+                sequenceBegin!, sequenceEnd, length,
                 guessCells, mode
             );
 
@@ -82,7 +87,13 @@ export class DefinitionCalculator {
     /**
      * Check if a sequence is correctly solved
      */
-    _isSequenceSolved(begin, end, lineLength, guessCells, mode) {
+    private _isSequenceSolved(
+        begin: number,
+        end: number,
+        lineLength: number,
+        guessCells: (CellStateType | undefined)[],
+        mode: GameModeType
+    ): boolean {
         if (mode !== GameMode.PLAY) return false;
 
         // Check boundaries - sequence must be surrounded by empty cells

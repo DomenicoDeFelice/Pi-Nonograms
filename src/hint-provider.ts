@@ -20,13 +20,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CellState } from './constants.js';
+import { CellState, CellStateType } from './constants.js';
+import { Grid } from './grid.js';
+import type Srand from 'seeded-rand';
+
+export interface Hint {
+    x: number;
+    y: number;
+    value: CellStateType | undefined;
+}
 
 /**
  * Provides hints for solving the nonogram.
  */
 export class HintProvider {
-    constructor(srand) {
+    private _srand: Srand;
+
+    constructor(srand: Srand) {
         this._srand = srand;
     }
 
@@ -34,11 +44,9 @@ export class HintProvider {
      * Find a hint to give the player
      * First checks for errors, then completes a random unknown cell
      *
-     * @param {Grid} actualGrid - The actual solution grid
-     * @param {Grid} guessGrid - The player's guess grid
-     * @returns {Object|null} {x, y, value} or null if no hint available
+     * @returns {x, y, value} or null if no hint available
      */
-    findHint(actualGrid, guessGrid) {
+    findHint(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
         // First, check for errors and correct them
         const errorHint = this._findError(actualGrid, guessGrid);
         if (errorHint) {
@@ -52,8 +60,8 @@ export class HintProvider {
     /**
      * Find the first error in the guess grid
      */
-    _findError(actualGrid, guessGrid) {
-        let hint = null;
+    private _findError(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
+        let hint: Hint | null = null;
 
         guessGrid.forEach((x, y, guessValue, index) => {
             if (hint) return; // Already found an error
@@ -76,12 +84,9 @@ export class HintProvider {
     /**
      * Find a random unknown cell to reveal
      */
-    _findUnknownCell(actualGrid, guessGrid) {
-        const width = actualGrid.width;
-        const height = actualGrid.height;
-
+    private _findUnknownCell(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
         // First, check if there are any unknown cells at all
-        const unknownCells = [];
+        const unknownCells: { x: number; y: number }[] = [];
         guessGrid.forEach((x, y, guessValue) => {
             if (guessValue === CellState.UNKNOWN) {
                 unknownCells.push({x: x, y: y});

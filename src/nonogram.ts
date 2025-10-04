@@ -20,14 +20,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { GameMode } from './constants.js';
+import { GameMode, GameModeType } from './constants.js';
 import { Model } from './model.js';
 import { View } from './view.js';
 import { Controller } from './controller.js';
 import Srand from 'seeded-rand';
 
+export interface NonogramOptions {
+    width?: number;
+    height?: number;
+    mode?: GameModeType;
+    theme?: string;
+    srand?: Srand;
+    onSolved?: () => void;
+}
+
 // Default options
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: Required<NonogramOptions> = {
     width:    10,
     height:   10,
     mode:     GameMode.PLAY,
@@ -39,25 +48,36 @@ const DEFAULT_OPTIONS = {
 };
 
 export class Nonogram {
-    constructor(container, opts) {
-        opts = opts || {};
+    static options = DEFAULT_OPTIONS;
 
-        // Apply default options
-        for (const option in DEFAULT_OPTIONS) {
-            // Default value if not specified
-            opts[option] = opts[option] || DEFAULT_OPTIONS[option];
+    private _model: Model;
+    private _view: View;
+    private _controller: Controller;
+    private _container: string | HTMLElement;
+    private _opts: Required<NonogramOptions>;
+
+    constructor(container: string | HTMLElement, opts?: NonogramOptions) {
+        const mergedOpts: Required<NonogramOptions> = { ...DEFAULT_OPTIONS };
+
+        // Apply user options
+        if (opts) {
+            for (const key in opts) {
+                if (opts[key as keyof NonogramOptions] !== undefined) {
+                    (mergedOpts as any)[key] = opts[key as keyof NonogramOptions];
+                }
+            }
         }
 
         const model = new Model({
-            width:  opts.width,
-            height: opts.height,
-            srand:  opts.srand,
-            mode:   opts.mode
+            width:  mergedOpts.width,
+            height: mergedOpts.height,
+            srand:  mergedOpts.srand,
+            mode:   mergedOpts.mode
         });
-        model.events.nonogramSolved.attach(opts.onSolved);
+        model.events.nonogramSolved.attach(mergedOpts.onSolved);
 
         const view = new View(model, container);
-        view.setTheme(opts.theme);
+        view.setTheme(mergedOpts.theme);
 
         const controller = new Controller(model, view);
 
@@ -66,14 +86,14 @@ export class Nonogram {
         this._controller = controller;
 
         this._container = container;
-        this._opts      = opts;
+        this._opts      = mergedOpts;
     }
 
-    show() {
+    show(): void {
         this._view.show();
     }
 
-    randomize(opts) {
+    randomize(opts?: { density?: number }): void {
         let density = 0.60;
         if (opts && opts.density) {
             density = opts.density;
@@ -82,31 +102,28 @@ export class Nonogram {
         this._model.randomize(density);
     }
 
-    giveHint() {
+    giveHint(): void {
         this._model.giveHint();
     }
 
-    startOver() {
+    startOver(): void {
         this._model.resetGuesses();
     }
 
-    setTheme(theme) {
+    setTheme(theme: string): void {
         this._opts.theme = theme;
         this._view.setTheme(theme);
     }
 
-    getMode() {
+    getMode(): GameModeType {
         return this._model.getMode();
     }
 
-    setMode(mode) {
+    setMode(mode: GameModeType): void {
         this._model.setMode(mode);
     }
 
-    showGameState() {
+    showGameState(): void {
         //alert(this._model.getGameState());
     }
 }
-
-// Expose default options as a static property for backward compatibility
-Nonogram.options = DEFAULT_OPTIONS;

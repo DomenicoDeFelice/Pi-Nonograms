@@ -6,6 +6,8 @@
 
   Copyright (c) 2013-2025 Domenico De Felice
 
+  @license
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
@@ -20,16 +22,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Main entry point - exports all public APIs
-export { CellState, GameMode } from './constants.js';
-export { Event } from './event.js';
-export { Grid } from './grid.js';
-export { default as Srand } from 'seeded-rand';
-export { DefinitionCalculator } from './definition-calculator.js';
-export { HintProvider } from './hint-provider.js';
-export { NonogramGenerator } from './nonogram-generator.js';
-export { DragHelper } from './drag-helper.js';
-export { Model } from './model.js';
-export { View } from './view.js';
-export { Controller } from './controller.js';
-export { Nonogram } from './nonogram.js';
+export type EventListener<TSender, TArgs> = (sender: TSender, args: TArgs) => void;
+
+export class Event<TSender = unknown, TArgs = unknown> {
+    private _sender: TSender;
+    private _listeners: EventListener<TSender, TArgs>[] = [];
+
+    constructor(sender: TSender) {
+        this._sender = sender;
+    }
+
+    attach(listener: EventListener<TSender, TArgs>): void {
+        this._listeners.push(listener);
+    }
+
+    notify(args: TArgs): void {
+        for (let index = 0, nListeners = this._listeners.length; index < nListeners; index++) {
+            this._listeners[index](this._sender, args);
+        }
+    }
+}
