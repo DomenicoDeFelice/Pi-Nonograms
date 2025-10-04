@@ -2,9 +2,9 @@
   A nonogram game written in javascript
   https://github.com/DomenicoDeFelice/Pi-Nonograms
 
-  Play the game: http://freenonograms.altervista.org
+  Play the game: https://domdefelice.net/pi-nonograms/
 
-  Copyright (c) 2013-2015 Domenico De Felice
+  Copyright (c) 2013-2025 Domenico De Felice
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
