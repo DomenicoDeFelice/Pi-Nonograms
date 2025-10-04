@@ -53,7 +53,7 @@ export class DefinitionCalculator {
                 sequenceLength++;
             } else if (sequenceLength) {
                 sequenceEnd = i - 1;
-                sequenceSolved = this._isSequenceSolved(
+                sequenceSolved = this.isSequenceSolved(
                     sequenceBegin!, sequenceEnd, length,
                     guessCells, mode
                 );
@@ -70,7 +70,7 @@ export class DefinitionCalculator {
         // Handle sequence that extends to the end of the line
         if (sequenceLength) {
             sequenceEnd = length - 1;
-            sequenceSolved = this._isSequenceSolved(
+            sequenceSolved = this.isSequenceSolved(
                 sequenceBegin!, sequenceEnd, length,
                 guessCells, mode
             );
@@ -87,7 +87,7 @@ export class DefinitionCalculator {
     /**
      * Check if a sequence is correctly solved
      */
-    private _isSequenceSolved(
+    private isSequenceSolved(
         begin: number,
         end: number,
         lineLength: number,

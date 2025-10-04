@@ -23,39 +23,39 @@
 import { CellStateType } from './constants.js';
 
 export class DragHelper {
-    private _dragging: boolean = false;
-    private _x1!: number;
-    private _y1!: number;
-    private _x2!: number;
-    private _y2!: number;
-    private _guess!: CellStateType;
+    private dragging: boolean = false;
+    private x1!: number;
+    private y1!: number;
+    private x2!: number;
+    private y2!: number;
+    private guess!: CellStateType;
 
     start(x: number, y: number, guess: CellStateType): void {
-        this._x1 = this._x2 = x;
-        this._y1 = this._y2 = y;
-        this._guess = guess;
+        this.x1 = this.x2 = x;
+        this.y1 = this.y2 = y;
+        this.guess = guess;
 
-        this._dragging = true;
+        this.dragging = true;
     }
 
     to(x: number, y: number): void {
-        this._x2 = x;
-        this._y2 = y;
+        this.x2 = x;
+        this.y2 = y;
     }
 
     stop(): void {
-        this._dragging = false;
+        this.dragging = false;
     }
 
     isDragging(): boolean {
-        return this._dragging;
+        return this.dragging;
     }
 
     iterateOverDraggedCells(fn: (x: number, y: number, guess: CellStateType) => void): void {
-        const x1 = this._x1;
-        const y1 = this._y1;
-        const x2 = this._x2;
-        const y2 = this._y2;
+        const x1 = this.x1;
+        const y1 = this.y1;
+        const x2 = this.x2;
+        const y2 = this.y2;
 
         let fromX: number, toX: number, stepX: number;
         let fromY: number, toY: number, stepY: number;
@@ -91,7 +91,7 @@ export class DragHelper {
         }
 
         for (let x = fromX, y = fromY; x <= toX && y <= toY; x += stepX, y += stepY) {
-            fn(x, y, this._guess);
+            fn(x, y, this.guess);
         }
     }
 }

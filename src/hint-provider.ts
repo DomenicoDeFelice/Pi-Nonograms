@@ -34,10 +34,10 @@ export interface Hint {
  * Provides hints for solving the nonogram.
  */
 export class HintProvider {
-    private _srand: Srand;
+    private srand: Srand;
 
     constructor(srand: Srand) {
-        this._srand = srand;
+        this.srand = srand;
     }
 
     /**
@@ -48,19 +48,19 @@ export class HintProvider {
      */
     findHint(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
         // First, check for errors and correct them
-        const errorHint = this._findError(actualGrid, guessGrid);
+        const errorHint = this.findError(actualGrid, guessGrid);
         if (errorHint) {
             return errorHint;
         }
 
         // No errors found, complete a random unknown cell
-        return this._findUnknownCell(actualGrid, guessGrid);
+        return this.findUnknownCell(actualGrid, guessGrid);
     }
 
     /**
      * Find the first error in the guess grid
      */
-    private _findError(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
+    private findError(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
         let hint: Hint | null = null;
 
         guessGrid.forEach((x, y, guessValue, index) => {
@@ -84,7 +84,7 @@ export class HintProvider {
     /**
      * Find a random unknown cell to reveal
      */
-    private _findUnknownCell(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
+    private findUnknownCell(actualGrid: Grid<CellStateType>, guessGrid: Grid<CellStateType>): Hint | null {
         // First, check if there are any unknown cells at all
         const unknownCells: { x: number; y: number }[] = [];
         guessGrid.forEach((x, y, guessValue) => {
@@ -99,7 +99,7 @@ export class HintProvider {
         }
 
         // Pick a random unknown cell
-        const randomIndex = this._srand.intInRange(0, unknownCells.length - 1);
+        const randomIndex = this.srand.intInRange(0, unknownCells.length - 1);
         const cell = unknownCells[randomIndex];
 
         return {

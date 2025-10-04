@@ -23,14 +23,14 @@
 export class Grid<T> {
     readonly width: number;
     readonly height: number;
-    private _defaultValue: T | undefined;
-    private _data: (T | undefined)[];
+    private defaultValue: T | undefined;
+    private data: (T | undefined)[];
 
     constructor(width: number, height: number, defaultValue?: T) {
         this.width = width;
         this.height = height;
-        this._defaultValue = defaultValue; // Value to return for unset cells
-        this._data = new Array(width * height);
+        this.defaultValue = defaultValue; // Value to return for unset cells
+        this.data = new Array(width * height);
     }
 
     // Get cell value at coordinates or index
@@ -39,11 +39,11 @@ export class Grid<T> {
         if (y === undefined) {
             index = x; // Called with index only
         } else {
-            index = this._indexFromXY(x, y);
+            index = this.indexFromXY(x, y);
         }
-        const value = this._data[index];
+        const value = this.data[index];
         // Return default value for unset cells
-        return (value === undefined) ? this._defaultValue : value;
+        return (value === undefined) ? this.defaultValue : value;
     }
 
     // Set cell value at coordinates or index
@@ -55,9 +55,9 @@ export class Grid<T> {
             value = y as T;
         } else {
             // Called with (x, y, value)
-            index = this._indexFromXY(x, y as number);
+            index = this.indexFromXY(x, y as number);
         }
-        this._data[index] = value;
+        this.data[index] = value;
     }
 
     // Get entire row as array
@@ -80,11 +80,11 @@ export class Grid<T> {
 
     // Iterate over all cells
     forEach(callback: (x: number, y: number, value: T | undefined, index: number) => void): void {
-        for (let index = 0; index < this._data.length; index++) {
-            const xy = this._XYFromIndex(index);
-            let value = this._data[index];
+        for (let index = 0; index < this.data.length; index++) {
+            const xy = this.xyFromIndex(index);
+            let value = this.data[index];
             // Return default value for unset cells, just like get()
-            if (value === undefined) value = this._defaultValue;
+            if (value === undefined) value = this.defaultValue;
             callback(xy[0], xy[1], value, index);
         }
     }
@@ -96,24 +96,24 @@ export class Grid<T> {
 
     // Clear all cells (set to undefined)
     clear(): void {
-        this._data = new Array(this.width * this.height);
+        this.data = new Array(this.width * this.height);
     }
 
     // Clone the grid
     clone(): Grid<T> {
         const cloned = new Grid<T>(this.width, this.height);
-        for (let i = 0; i < this._data.length; i++) {
-            cloned._data[i] = this._data[i];
+        for (let i = 0; i < this.data.length; i++) {
+            cloned.data[i] = this.data[i];
         }
         return cloned;
     }
 
     // Coordinate conversion helpers
-    private _indexFromXY(x: number, y: number): number {
+    private indexFromXY(x: number, y: number): number {
         return y * this.width + x;
     }
 
-    private _XYFromIndex(index: number): [number, number] {
+    private xyFromIndex(index: number): [number, number] {
         const y = Math.floor(index / this.width);
         const x = index % this.width;
         return [x, y];

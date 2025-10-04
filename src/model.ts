@@ -52,22 +52,22 @@ export class Model {
         nonogramUnsolved: Event<Model, undefined>;
     };
 
-    private _actual!: Grid<CellStateType>;
-    private _guess!: Grid<CellStateType>;
-    private _mode!: GameModeType;
-    private _solved: boolean = false;
-    private _definitionCalc: DefinitionCalculator;
-    private _hintProvider: HintProvider;
-    private _generator: NonogramGenerator;
+    private actual!: Grid<CellStateType>;
+    private guess!: Grid<CellStateType>;
+    private mode!: GameModeType;
+    private solved: boolean = false;
+    private definitionCalc: DefinitionCalculator;
+    private hintProvider: HintProvider;
+    private generator: NonogramGenerator;
 
     constructor(opts: ModelOptions) {
         this.width  = opts.width;
         this.height = opts.height;
 
         // Initialize helper classes
-        this._definitionCalc = new DefinitionCalculator();
-        this._hintProvider = new HintProvider(opts.srand);
-        this._generator = new NonogramGenerator(opts.srand);
+        this.definitionCalc = new DefinitionCalculator();
+        this.hintProvider = new HintProvider(opts.srand);
+        this.generator = new NonogramGenerator(opts.srand);
 
         // Events fired by the model
         this.events = {
@@ -81,7 +81,7 @@ export class Model {
             nonogramUnsolved: new Event<Model, undefined>(this)
         };
 
-        this._setupNonogram();
+        this.setupNonogram();
         this.setMode(opts.mode || GameMode.PLAY);
     }
 
@@ -89,11 +89,11 @@ export class Model {
     // Arguments can be the x and y coordinates of the cell or
     // the index of the cell (second argument not passed)
     getCellAt(x: number, y?: number): CellStateType | undefined {
-        return this._actual.get(x, y);
+        return this.actual.get(x, y);
     }
 
     getGuessAt(x: number, y?: number): CellStateType | undefined {
-        return this._guess.get(x, y);
+        return this.guess.get(x, y);
     }
 
     setGuessAt(x: number, y: number | CellStateType, guess?: CellStateType): void {
@@ -105,7 +105,7 @@ export class Model {
             // Shift arguments - called with (index, guess)
             guess = y as CellStateType;
             index = x;
-            const xy = this._actual['_XYFromIndex'](index);
+            const xy = this.actual['xyFromIndex'](index);
             actualX = xy[0];
             actualY = xy[1];
         } else {
@@ -114,7 +114,7 @@ export class Model {
         }
 
         const oldGuess = this.getGuessAt(actualX, actualY);
-        this._guess.set(actualX, actualY, guess);
+        this.guess.set(actualX, actualY, guess);
 
         this.events.guessChanged.notify({
             x: actualX,
@@ -123,103 +123,103 @@ export class Model {
             newGuess: guess
         });
 
-        if (this._mode === GameMode.PLAY) this._checkIfSolved();
+        if (this.mode === GameMode.PLAY) this.checkIfSolved();
     }
 
     getMode(): GameModeType {
-        return this._mode;
+        return this.mode;
     }
 
     setMode(mode: GameModeType): void {
-        if (mode === this._mode) return;
+        if (mode === this.mode) return;
 
-        this._mode = mode;
+        this.mode = mode;
 
         if (mode === GameMode.DRAW) {
             // In draw mode, start with unknown cells and guess/actual are the same
-            this._actual = new Grid(this.width, this.height, CellState.UNKNOWN);
-            this._guess = this._actual;
+            this.actual = new Grid(this.width, this.height, CellState.UNKNOWN);
+            this.guess = this.actual;
         } else {
             // In play mode, create new empty guess grid with UNKNOWN default
-            this._guess = new Grid(this.width, this.height, CellState.UNKNOWN);
+            this.guess = new Grid(this.width, this.height, CellState.UNKNOWN);
         }
 
-        this._setUnsolved();
+        this.setUnsolved();
         this.events.nonogramChanged.notify(undefined);
     }
 
     isSolved(): boolean {
-        return this._solved;
+        return this.solved;
     }
 
     getRowDefinition(row: number): LineDefinition[] {
-        const actualCells = this._actual.getRow(row);
-        const guessCells = this._guess.getRow(row);
-        return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
+        const actualCells = this.actual.getRow(row);
+        const guessCells = this.guess.getRow(row);
+        return this.definitionCalc.calculateLineDefinition(actualCells, guessCells, this.mode);
     }
 
     getColumnDefinition(col: number): LineDefinition[] {
-        const actualCells = this._actual.getColumn(col);
-        const guessCells = this._guess.getColumn(col);
-        return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
+        const actualCells = this.actual.getColumn(col);
+        const guessCells = this.guess.getColumn(col);
+        return this.definitionCalc.calculateLineDefinition(actualCells, guessCells, this.mode);
     }
 
     giveHint(): void {
         // Is there any hint to give?
-        if (this.isSolved() || this._mode !== GameMode.PLAY) return;
+        if (this.isSolved() || this.mode !== GameMode.PLAY) return;
 
-        const hint = this._hintProvider.findHint(this._actual, this._guess);
+        const hint = this.hintProvider.findHint(this.actual, this.guess);
         if (hint) {
             this.setGuessAt(hint.x, hint.y, hint.value!);
         }
     }
 
     randomize(density: number): void {
-        this._setupNonogram();
-        this._mode = GameMode.PLAY;
+        this.setupNonogram();
+        this.mode = GameMode.PLAY;
 
-        this._generator.generate(this._actual, density);
+        this.generator.generate(this.actual, density);
 
         this.events.nonogramChanged.notify(undefined);
     }
 
     resetGuesses(): void {
-        this._guess = new Grid(this.width, this.height, CellState.UNKNOWN);
-        if (this._mode === GameMode.DRAW) {
-            this._actual = this._guess;
+        this.guess = new Grid(this.width, this.height, CellState.UNKNOWN);
+        if (this.mode === GameMode.DRAW) {
+            this.actual = this.guess;
         }
 
-        this._solved = false;
+        this.solved = false;
 
         this.events.nonogramChanged.notify(undefined);
     }
 
     // Private methods
-    private _setupNonogram(): void {
-        this._actual = new Grid(this.width, this.height, CellState.EMPTY);
-        this._guess  = new Grid(this.width, this.height, CellState.UNKNOWN);
-        this._setUnsolved();
+    private setupNonogram(): void {
+        this.actual = new Grid(this.width, this.height, CellState.EMPTY);
+        this.guess  = new Grid(this.width, this.height, CellState.UNKNOWN);
+        this.setUnsolved();
     }
 
-    private _setSolved(): void {
+    private setSolved(): void {
         if (!this.isSolved()) {
-            this._solved = true;
+            this.solved = true;
             this.events.nonogramSolved.notify(undefined);
         }
     }
 
-    private _setUnsolved(): void {
+    private setUnsolved(): void {
         if (this.isSolved()) {
-            this._solved = false;
+            this.solved = false;
             this.events.nonogramUnsolved.notify(undefined);
         }
     }
 
-    private _checkIfSolved(): void {
+    private checkIfSolved(): void {
         let solved = true;
 
-        this._actual.forEach((x, y, actualValue) => {
-            const guessValue = this._guess.get(x, y);
+        this.actual.forEach((x, y, actualValue) => {
+            const guessValue = this.guess.get(x, y);
 
             if ((actualValue === CellState.FILLED && guessValue !== CellState.FILLED) ||
                 (actualValue !== CellState.FILLED && guessValue === CellState.FILLED)) {
@@ -228,9 +228,9 @@ export class Model {
         });
 
         if (solved) {
-            this._setSolved();
+            this.setSolved();
         } else {
-            this._setUnsolved();
+            this.setUnsolved();
         }
     }
 }

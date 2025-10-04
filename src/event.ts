@@ -25,20 +25,20 @@
 export type EventListener<TSender, TArgs> = (sender: TSender, args: TArgs) => void;
 
 export class Event<TSender = unknown, TArgs = unknown> {
-    private _sender: TSender;
-    private _listeners: EventListener<TSender, TArgs>[] = [];
+    private sender: TSender;
+    private listeners: EventListener<TSender, TArgs>[] = [];
 
     constructor(sender: TSender) {
-        this._sender = sender;
+        this.sender = sender;
     }
 
     attach(listener: EventListener<TSender, TArgs>): void {
-        this._listeners.push(listener);
+        this.listeners.push(listener);
     }
 
     notify(args: TArgs): void {
-        for (let index = 0, nListeners = this._listeners.length; index < nListeners; index++) {
-            this._listeners[index](this._sender, args);
+        for (let index = 0, nListeners = this.listeners.length; index < nListeners; index++) {
+            this.listeners[index](this.sender, args);
         }
     }
 }

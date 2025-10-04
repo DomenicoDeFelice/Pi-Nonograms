@@ -26,15 +26,15 @@ import { Model } from './model.js';
 import { View } from './view.js';
 
 export class Controller {
-    private _dragHelper: DragHelper;
-    private _model: Model;
-    private _view: View;
+    private dragHelper: DragHelper;
+    private model: Model;
+    private view: View;
 
     constructor(model: Model, view: View) {
-        this._dragHelper = new DragHelper();
+        this.dragHelper = new DragHelper();
 
-        this._model = model;
-        this._view = view;
+        this.model = model;
+        this.view = view;
         const controller = this;
 
         // Application Logic
@@ -56,26 +56,26 @@ export class Controller {
 
         view.events.mouseDownOnCell.attach((view, cell) => {
             if (!cell) return;
-            controller._dragHelper.start(cell.x, cell.y, controller._nextGuess(model.getGuessAt(cell.x, cell.y)));
-            controller._previewDragging();
+            controller.dragHelper.start(cell.x, cell.y, controller.nextGuess(model.getGuessAt(cell.x, cell.y)));
+            controller.previewDragging();
         });
 
         view.events.mouseUp.attach(() => {
-            if (!controller._dragHelper.isDragging())
+            if (!controller.dragHelper.isDragging())
                 return;
-            controller._dragHelper.stop();
-            controller._cancelDraggingPreview();
-            controller._applyDragging();
+            controller.dragHelper.stop();
+            controller.cancelDraggingPreview();
+            controller.applyDragging();
         });
 
         view.events.mouseEntersCell.attach((view, cell) => {
             if (!cell) return;
             view.highlightColumn(cell.x);
-            if (!controller._dragHelper.isDragging()) return;
+            if (!controller.dragHelper.isDragging()) return;
 
-            controller._cancelDraggingPreview();
-            controller._dragHelper.to(cell.x, cell.y);
-            controller._previewDragging();
+            controller.cancelDraggingPreview();
+            controller.dragHelper.to(cell.x, cell.y);
+            controller.previewDragging();
         });
 
         view.events.mouseLeavesCell.attach((view, cell) => {
@@ -87,7 +87,7 @@ export class Controller {
     // Private methods
 
     // cycles in [unknown, filled, empty]
-    private _nextGuess(guess: CellStateType | undefined): CellStateType {
+    private nextGuess(guess: CellStateType | undefined): CellStateType {
         if (guess === CellState.UNKNOWN) {
             return CellState.FILLED;
         } else if (guess === CellState.FILLED) {
@@ -96,27 +96,27 @@ export class Controller {
         return CellState.UNKNOWN;
     }
 
-    private _previewDragging(): void {
-        const view = this._view;
+    private previewDragging(): void {
+        const view = this.view;
 
-        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
+        this.dragHelper.iterateOverDraggedCells((x, y, guess) => {
             view.setGuessAt(x, y, guess);
         });
     }
 
-    private _applyDragging(): void {
-        const model = this._model;
+    private applyDragging(): void {
+        const model = this.model;
 
-        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
+        this.dragHelper.iterateOverDraggedCells((x, y, guess) => {
             model.setGuessAt(x, y, guess);
         });
     }
 
-    private _cancelDraggingPreview(): void {
-        const model = this._model;
-        const view  = this._view;
+    private cancelDraggingPreview(): void {
+        const model = this.model;
+        const view  = this.view;
 
-        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
+        this.dragHelper.iterateOverDraggedCells((x, y, guess) => {
             view.setGuessAt(x, y, model.getGuessAt(x, y)!);
         });
     }

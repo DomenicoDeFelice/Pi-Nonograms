@@ -50,11 +50,11 @@ const DEFAULT_OPTIONS: Required<NonogramOptions> = {
 export class Nonogram {
     static options = DEFAULT_OPTIONS;
 
-    private _model: Model;
-    private _view: View;
-    private _controller: Controller;
-    private _container: string | HTMLElement;
-    private _opts: Required<NonogramOptions>;
+    private model: Model;
+    private view: View;
+    private controller: Controller;
+    private container: string | HTMLElement;
+    private opts: Required<NonogramOptions>;
 
     constructor(container: string | HTMLElement, opts?: NonogramOptions) {
         const mergedOpts: Required<NonogramOptions> = { ...DEFAULT_OPTIONS };
@@ -81,16 +81,16 @@ export class Nonogram {
 
         const controller = new Controller(model, view);
 
-        this._model      = model;
-        this._view       = view;
-        this._controller = controller;
+        this.model      = model;
+        this.view       = view;
+        this.controller = controller;
 
-        this._container = container;
-        this._opts      = mergedOpts;
+        this.container = container;
+        this.opts      = mergedOpts;
     }
 
     show(): void {
-        this._view.show();
+        this.view.show();
     }
 
     randomize(opts?: { density?: number }): void {
@@ -99,31 +99,31 @@ export class Nonogram {
             density = opts.density;
         }
 
-        this._model.randomize(density);
+        this.model.randomize(density);
     }
 
     giveHint(): void {
-        this._model.giveHint();
+        this.model.giveHint();
     }
 
     startOver(): void {
-        this._model.resetGuesses();
+        this.model.resetGuesses();
     }
 
     setTheme(theme: string): void {
-        this._opts.theme = theme;
-        this._view.setTheme(theme);
+        this.opts.theme = theme;
+        this.view.setTheme(theme);
     }
 
     getMode(): GameModeType {
-        return this._model.getMode();
+        return this.model.getMode();
     }
 
     setMode(mode: GameModeType): void {
-        this._model.setMode(mode);
+        this.model.setMode(mode);
     }
 
     showGameState(): void {
-        //alert(this._model.getGameState());
+        //alert(this.model.getGameState());
     }
 }

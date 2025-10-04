@@ -28,10 +28,10 @@ import type Srand from 'seeded-rand';
  * Generates random nonogram puzzles.
  */
 export class NonogramGenerator {
-    private _srand: Srand;
+    private srand: Srand;
 
     constructor(srand: Srand) {
-        this._srand = srand;
+        this.srand = srand;
     }
 
     /**
@@ -48,7 +48,7 @@ export class NonogramGenerator {
 
         let index: number;
         while (toBeFilled) {
-            index = this._srand.intInRange(0, nCells - 1);
+            index = this.srand.intInRange(0, nCells - 1);
             // Check if cell is empty (not yet filled)
             if (grid.get(index) === CellState.EMPTY) {
                 grid.set(index, CellState.FILLED);
