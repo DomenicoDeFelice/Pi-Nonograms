@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Fade in demo element
     demoElement.style.opacity = '0';
-    demoElement.style.display = 'block';
+    demoElement.style.display = 'inline-block';
     demoElement.style.transition = 'opacity 1.5s';
     setTimeout(() => {
         demoElement.style.opacity = '1';
