@@ -35,12 +35,16 @@ dfd.nonograms.Model = function (opts) {
 
     this.width  = opts.width;
     this.height = opts.height;
-    this._srand = opts.srand;
+
+    // Initialize helper classes
+    this._definitionCalc = new dfd.nonograms.DefinitionCalculator();
+    this._hintProvider = new dfd.nonograms.HintProvider(opts.srand);
+    this._generator = new dfd.nonograms.NonogramGenerator(opts.srand);
 
     // Events fired by the model
     this.events = {};
 
-    // The ussr guessed the content of a cell
+    // The user guessed the content of a cell
     this.events.guessChanged     = new dfd.Event(this);
     // The nonogram has been changed
     this.events.nonogramChanged  = new dfd.Event(this);
@@ -55,60 +59,32 @@ dfd.nonograms.Model = function (opts) {
 
 
 dfd.nonograms.Model.prototype = {
-    // Coordinate helper methods
-    _indexFromXY: function (x, y) {
-        return y * this.width + x;
-    },
-
-    _XYFromIndex: function (index) {
-        var width = this.width;
-        var y = Math.floor(index / width);
-        var x = index % width;
-        return [x, y];
-    },
-
     // Returns the state of a cell.
     // Arguments can be the x and y coordinates of the cell or
     // the index of the cell (second argument not passed)
     getCellAt: function (x, y) {
-        var CellState = dfd.nonograms.CellState;
-        var index;
-        if (y === undefined) {
-            index = x;
-        } else {
-            index = this._indexFromXY(x, y);
-        }
-
-        var cell = this._actual[index];
-        return (cell === undefined) ? CellState.EMPTY : cell;
+        return this._actual.get(x, y);
     },
 
     getGuessAt: function (x, y) {
-        var CellState = dfd.nonograms.CellState;
-        var index;
-        if (y === undefined) {
-            index = x;
-        } else {
-            index = this._indexFromXY(x, y);
-        }
-
-        var guess = this._guess[index];
-        return (guess === undefined) ? CellState.UNKNOWN : guess;
+        return this._guess.get(x, y);
     },
 
     setGuessAt: function (x, y, guess) {
+        var GameMode = dfd.nonograms.GameMode;
         var index;
 
         if (guess === undefined) {
-            // Shift arguments
+            // Shift arguments - called with (index, guess)
             guess = y;
             index = x;
-        } else {
-            index = this._indexFromXY(x, y);
+            var xy = this._actual._XYFromIndex(index);
+            x = xy[0];
+            y = xy[1];
         }
 
-        var oldGuess = this.getGuessAt(index);
-        this._guess[index] = guess;
+        var oldGuess = this.getGuessAt(x, y);
+        this._guess.set(x, y, guess);
 
         this.events.guessChanged.notify({
             x: x,
@@ -117,7 +93,6 @@ dfd.nonograms.Model.prototype = {
             newGuess: guess
         });
 
-        var GameMode = dfd.nonograms.GameMode;
         if (this._mode === GameMode.PLAY) this._checkIfSolved();
     },
 
@@ -127,15 +102,18 @@ dfd.nonograms.Model.prototype = {
 
     setMode: function (mode) {
         var GameMode = dfd.nonograms.GameMode;
+        var CellState = dfd.nonograms.CellState;
+
         if (mode === this._mode) return;
 
         this._mode = mode;
 
         if (mode === GameMode.DRAW) {
+            // In draw mode, guess and actual are the same
             this._guess = this._actual;
         } else {
-            var nCells = this.width * this.height;
-            this._guess = new Array(nCells);
+            // In play mode, create new empty guess grid with UNKNOWN default
+            this._guess = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
         }
 
         this._setUnsolved();
@@ -147,159 +125,45 @@ dfd.nonograms.Model.prototype = {
     },
 
     getRowDefinition: function (row) {
-        var model = this;
-        return this._getLineDefinition(
-            this.width,
-            function(i) { return model.getCellAt(i, row); },
-            function(i) { return model.getGuessAt(i, row); },
-            function(i) { return i === 0 || i === model.width - 1; }
-        );
+        var actualCells = this._actual.getRow(row);
+        var guessCells = this._guess.getRow(row);
+        return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
     },
 
     getColumnDefinition: function (col) {
-        var model = this;
-        return this._getLineDefinition(
-            this.height,
-            function(i) { return model.getCellAt(col, i); },
-            function(i) { return model.getGuessAt(col, i); },
-            function(i) { return i === 0 || i === model.height - 1; }
-        );
-    },
-
-    // Private helper to eliminate duplication between row and column definition logic
-    _getLineDefinition: function (length, getCellFn, getGuessFn, isEdgeFn) {
-        var CellState = dfd.nonograms.CellState;
-        var GameMode = dfd.nonograms.GameMode;
-        var definition = [];
-
-        var sequenceBegin;
-        var sequenceEnd;
-        var sequenceSolved;
-        var sequenceLength = 0;
-
-        var mode = this._mode;
-
-        for (var i = 0; i < length; i++) {
-            if (getCellFn(i) === CellState.FILLED) {
-                if (sequenceLength === 0) sequenceBegin = i;
-                sequenceLength++;
-            } else if (sequenceLength) {
-                sequenceEnd = i - 1;
-                sequenceSolved = false;
-
-                if (mode === GameMode.PLAY) {
-                    if ((isEdgeFn(sequenceBegin) || getGuessFn(sequenceBegin - 1) === CellState.EMPTY) &&
-                        (isEdgeFn(sequenceEnd) || getGuessFn(sequenceEnd + 1) === CellState.EMPTY)) {
-
-                        sequenceSolved = true;
-                        for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                            if (getGuessFn(index) !== CellState.FILLED) {
-                                sequenceSolved = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                definition.push({
-                    length: sequenceLength,
-                    solved: sequenceSolved
-                });
-
-                sequenceLength = 0;
-            }
-        }
-
-        // Handle sequence that extends to the end of the line
-        if (sequenceLength) {
-            sequenceEnd = i - 1;
-            sequenceSolved = false;
-
-            if (mode === GameMode.PLAY) {
-                if ((isEdgeFn(sequenceBegin) || getGuessFn(sequenceBegin - 1) === CellState.EMPTY) &&
-                    (isEdgeFn(sequenceEnd) || getGuessFn(sequenceEnd + 1) === CellState.EMPTY)) {
-
-                    sequenceSolved = true;
-                    for (var index = sequenceBegin; index <= sequenceEnd; index++) {
-                        if (getGuessFn(index) !== CellState.FILLED) {
-                            sequenceSolved = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            definition.push({
-                length: sequenceLength,
-                solved: sequenceSolved
-            });
-        }
-
-        return definition;
+        var actualCells = this._actual.getColumn(col);
+        var guessCells = this._guess.getColumn(col);
+        return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
     },
 
     giveHint: function () {
-        var CellState = dfd.nonograms.CellState;
         var GameMode = dfd.nonograms.GameMode;
 
         // Is there any hint to give?
         if (this.isSolved() || this._mode !== GameMode.PLAY) return;
 
-        // Let's first check for errors
-        var nCells = this.width * this.height;
-        var actual = this._actual;
-        var guess  = this._guess;
-        var xy, x, y;
-        for (var index=nCells; index--; ) {
-            if ((guess[index] === CellState.FILLED && actual[index] !== CellState.FILLED) ||
-                (guess[index] === CellState.EMPTY  && actual[index] === CellState.FILLED)) {
-                // Error found, correct it
-                xy = this._XYFromIndex(index);
-                x = xy[0];
-                y = xy[1];
-                this.setGuessAt(x, y, this.getCellAt(x, y));
-                return;
-            }
+        var hint = this._hintProvider.findHint(this._actual, this._guess);
+        if (hint) {
+            this.setGuessAt(hint.x, hint.y, hint.value);
         }
-
-        // No errors found, let's complete a cell
-        do {
-            xy = this._getRandomXY();
-            x = xy[0];
-            y = xy[1];
-        } while (this.getGuessAt(x, y) !== CellState.UNKNOWN)
-        this.setGuessAt(x, y, this.getCellAt(x, y));
     },
 
     randomize: function (density) {
-        var CellState = dfd.nonograms.CellState;
         var GameMode = dfd.nonograms.GameMode;
 
         this._setupNonogram();
         this._mode = GameMode.PLAY;
 
-        var actual = this._actual;
-        var nCells = this.width * this.height;
-        var toBeFilled = Math.floor(nCells * density);
-        if (toBeFilled > nCells) toBeFilled = nCells;
-
-        var index;
-        while (toBeFilled) {
-            index = this._getRandomIndex();
-            if (actual[index] === undefined) {
-                actual[index] = CellState.FILLED;
-                toBeFilled--;
-            }
-        }
+        this._generator.generate(this._actual, density);
 
         this.events.nonogramChanged.notify();
     },
 
     resetGuesses: function () {
         var GameMode = dfd.nonograms.GameMode;
-        var nCells = this.width * this.height;
+        var CellState = dfd.nonograms.CellState;
 
-        this._guess = new Array(nCells);
+        this._guess = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
         if (this._mode === GameMode.DRAW) {
             this._actual = this._guess;
         }
@@ -311,22 +175,10 @@ dfd.nonograms.Model.prototype = {
 
     // Private methods
     _setupNonogram: function () {
-        var nCells = this.width * this.height;
-
-        this._actual = new Array(nCells);
-        this._guess  = new Array(nCells);
+        var CellState = dfd.nonograms.CellState;
+        this._actual = new dfd.nonograms.Grid(this.width, this.height, CellState.EMPTY);
+        this._guess  = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
         this._setUnsolved();
-    },
-
-    _getRandomIndex: function () {
-        var nCells = this.width * this.height;
-        return this._srand.randomIntegerIn(0, nCells - 1);
-    },
-
-    _getRandomXY: function () {
-        var x = this._srand.randomIntegerIn(0, this.width  - 1);
-        var y = this._srand.randomIntegerIn(0, this.height - 1);
-        return [x, y];
     },
 
     _setSolved: function () {
@@ -345,17 +197,23 @@ dfd.nonograms.Model.prototype = {
 
     _checkIfSolved: function () {
         var CellState = dfd.nonograms.CellState;
-        var actual = this._actual;
-        var guess  = this._guess;
+        var model = this;
+        var solved = true;
 
-        for (var index = actual.length; index--; ) {
-            if ((actual[index] === CellState.FILLED && guess[index] !== CellState.FILLED) ||
-                (actual[index] !== CellState.FILLED && guess[index] === CellState.FILLED)) {
-                this._setUnsolved();
-                return;
+        this._actual.forEach(function (x, y, actualValue) {
+            var guessValue = model._guess.get(x, y);
+
+            if ((actualValue === CellState.FILLED && guessValue !== CellState.FILLED) ||
+                (actualValue !== CellState.FILLED && guessValue === CellState.FILLED)) {
+                solved = false;
             }
+        });
+
+        if (solved) {
+            this._setSolved();
+        } else {
+            this._setUnsolved();
         }
-        this._setSolved();
     }
 };
 
