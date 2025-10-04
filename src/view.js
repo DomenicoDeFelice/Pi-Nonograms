@@ -33,7 +33,8 @@ export class View {
 
         let id;
         do {
-            id = 'nonogram-' + window.dfd.Srand.randomIntegerIn(0, 1000000, Math.random());
+            const random = Math.random();
+            id = 'nonogram-' + Math.floor(random * 1000001);
         } while ($('#' + id).length);
         this._id = id;
 

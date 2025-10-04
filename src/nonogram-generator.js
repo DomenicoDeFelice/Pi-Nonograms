@@ -44,7 +44,7 @@ export class NonogramGenerator {
 
         let index;
         while (toBeFilled) {
-            index = this._srand.randomIntegerIn(0, nCells - 1);
+            index = this._srand.intInRange(0, nCells - 1);
             // Check if cell is empty (not yet filled)
             if (grid.get(index) === CellState.EMPTY) {
                 grid.set(index, CellState.FILLED);

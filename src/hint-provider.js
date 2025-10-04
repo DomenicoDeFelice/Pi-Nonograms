@@ -94,7 +94,7 @@ export class HintProvider {
         }
 
         // Pick a random unknown cell
-        const randomIndex = this._srand.randomIntegerIn(0, unknownCells.length - 1);
+        const randomIndex = this._srand.intInRange(0, unknownCells.length - 1);
         const cell = unknownCells[randomIndex];
 
         return {

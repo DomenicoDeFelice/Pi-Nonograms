@@ -24,6 +24,7 @@ import { GameMode } from './constants.js';
 import { Model } from './model.js';
 import { View } from './view.js';
 import { Controller } from './controller.js';
+import Srand from 'seeded-rand';
 
 // Default options
 const DEFAULT_OPTIONS = {
@@ -31,7 +32,7 @@ const DEFAULT_OPTIONS = {
     height:   10,
     mode:     GameMode.PLAY,
     theme:    'classic',
-    srand:    window.dfd.Srand,
+    srand:    new Srand(),
     onSolved: () => {
         alert('Congratulations! Nonogram solved!');
     }

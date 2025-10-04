@@ -24,6 +24,7 @@
 export { CellState, GameMode } from './constants.js';
 export { Event } from './event.js';
 export { Grid } from './grid.js';
+export { default as Srand } from 'seeded-rand';
 export { DefinitionCalculator } from './definition-calculator.js';
 export { HintProvider } from './hint-provider.js';
 export { NonogramGenerator } from './nonogram-generator.js';

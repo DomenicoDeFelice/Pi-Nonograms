@@ -1,8 +1,7 @@
-import { Nonogram, GameMode } from '../src/main.js';
+import { Nonogram, GameMode, Srand } from '../src/main.js';
 
-// jQuery and Srand are loaded as globals from CDN
+// jQuery is loaded as a global from CDN
 const $ = window.jQuery;
-const Srand = window.dfd.Srand;
 
 let nonogram;
 
