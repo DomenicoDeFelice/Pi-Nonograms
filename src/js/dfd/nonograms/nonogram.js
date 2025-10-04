@@ -20,97 +20,92 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
+import { GameMode } from './constants.js';
+import { Model } from './model.js';
+import { View } from './view.js';
+import { Controller } from './controller.js';
 
-if (!global.dfd) {
-    global.dfd = {};
-}
-
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
-
-dfd.nonograms.Nonogram = function (container, opts) {
-    var model, view, controller;
-    var default_options = dfd.nonograms.Nonogram.options;
-
-    opts = opts || {};
-    for (var option in default_options) {
-        // Default value if not specified
-        opts[option] = opts[option] || default_options[option];
-    }
-
-    model = new dfd.nonograms.Model({
-        width:  opts.width,
-        height: opts.height,
-        srand:  opts.srand,
-        mode:   opts.mode
-    });
-    model.events.nonogramSolved.attach(opts.onSolved);
-
-    view = new dfd.nonograms.View(model, container);
-    view.setTheme(opts.theme);
-
-    controller = new dfd.nonograms.Controller(model, view);
-
-    this._model      = model
-    this._view       = view;
-    this._controller = controller;
-
-    this._container = container;
-    this._opts      = opts;
-}
-
-// Options and their default value
-dfd.nonograms.Nonogram.options = {
+// Default options
+const DEFAULT_OPTIONS = {
     width:    10,
     height:   10,
-    mode:     dfd.nonograms.GameMode.PLAY,
+    mode:     GameMode.PLAY,
     theme:    'classic',
-    srand:    dfd.Srand,
-    onSolved: function () {
+    srand:    window.dfd.Srand,
+    onSolved: () => {
         alert('Congratulations! Nonogram solved!');
     }
 };
 
-dfd.nonograms.Nonogram.prototype = {
-    show: function () {
-        this._view.show();
-    },
+export class Nonogram {
+    constructor(container, opts) {
+        opts = opts || {};
 
-    randomize: function (opts) {
-        var density = 0.60;
+        // Apply default options
+        for (const option in DEFAULT_OPTIONS) {
+            // Default value if not specified
+            opts[option] = opts[option] || DEFAULT_OPTIONS[option];
+        }
+
+        const model = new Model({
+            width:  opts.width,
+            height: opts.height,
+            srand:  opts.srand,
+            mode:   opts.mode
+        });
+        model.events.nonogramSolved.attach(opts.onSolved);
+
+        const view = new View(model, container);
+        view.setTheme(opts.theme);
+
+        const controller = new Controller(model, view);
+
+        this._model      = model;
+        this._view       = view;
+        this._controller = controller;
+
+        this._container = container;
+        this._opts      = opts;
+    }
+
+    show() {
+        this._view.show();
+    }
+
+    randomize(opts) {
+        let density = 0.60;
         if (opts && opts.density) {
             density = opts.density;
         }
 
         this._model.randomize(density);
-    },
+    }
 
-    giveHint: function () {
+    giveHint() {
         this._model.giveHint();
-    },
+    }
 
-    startOver: function () {
+    startOver() {
         this._model.resetGuesses();
-    },
+    }
 
-    setTheme: function (theme) {
+    setTheme(theme) {
         this._opts.theme = theme;
         this._view.setTheme(theme);
-    },
+    }
 
-    getMode: function () {
+    getMode() {
         return this._model.getMode();
-    },
+    }
 
-    setMode: function (mode) {
+    setMode(mode) {
         this._model.setMode(mode);
-    },
+    }
 
-    showGameState: function () {
+    showGameState() {
         //alert(this._model.getGameState());
     }
-};
+}
 
-}(window);
+// Expose default options as a static property for backward compatibility
+Nonogram.options = DEFAULT_OPTIONS;

@@ -1,0 +1,22 @@
+{
+  "name": "pi-nonograms",
+  "version": "1.0.0",
+  "description": "A nonogram game written in javascript",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "nonogram",
+    "game",
+    "puzzle"
+  ],
+  "author": "Domenico De Felice",
+  "license": "GPL-3.0-or-later",
+  "packageManager": "pnpm@10.8.1",
+  "devDependencies": {
+    "vite": "^7.1.9"
+  }
+}

@@ -20,25 +20,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
-
-if (!global.dfd) {
-    global.dfd = {};
-}
-
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
+import { CellState } from './constants.js';
 
 /**
  * HintProvider - Provides hints for solving the nonogram
  * Extracted from Model to follow Single Responsibility Principle
  */
-dfd.nonograms.HintProvider = function (srand) {
-    this._srand = srand;
-};
+export class HintProvider {
+    constructor(srand) {
+        this._srand = srand;
+    }
 
-dfd.nonograms.HintProvider.prototype = {
     /**
      * Find a hint to give the player
      * First checks for errors, then completes a random unknown cell
@@ -47,30 +39,27 @@ dfd.nonograms.HintProvider.prototype = {
      * @param {Grid} guessGrid - The player's guess grid
      * @returns {Object|null} {x, y, value} or null if no hint available
      */
-    findHint: function (actualGrid, guessGrid) {
-        var CellState = dfd.nonograms.CellState;
-
+    findHint(actualGrid, guessGrid) {
         // First, check for errors and correct them
-        var errorHint = this._findError(actualGrid, guessGrid);
+        const errorHint = this._findError(actualGrid, guessGrid);
         if (errorHint) {
             return errorHint;
         }
 
         // No errors found, complete a random unknown cell
         return this._findUnknownCell(actualGrid, guessGrid);
-    },
+    }
 
     /**
      * Find the first error in the guess grid
      */
-    _findError: function (actualGrid, guessGrid) {
-        var CellState = dfd.nonograms.CellState;
-        var hint = null;
+    _findError(actualGrid, guessGrid) {
+        let hint = null;
 
-        guessGrid.forEach(function (x, y, guessValue, index) {
+        guessGrid.forEach((x, y, guessValue, index) => {
             if (hint) return; // Already found an error
 
-            var actualValue = actualGrid.get(index);
+            const actualValue = actualGrid.get(index);
 
             if ((guessValue === CellState.FILLED && actualValue !== CellState.FILLED) ||
                 (guessValue === CellState.EMPTY && actualValue === CellState.FILLED)) {
@@ -83,19 +72,18 @@ dfd.nonograms.HintProvider.prototype = {
         });
 
         return hint;
-    },
+    }
 
     /**
      * Find a random unknown cell to reveal
      */
-    _findUnknownCell: function (actualGrid, guessGrid) {
-        var CellState = dfd.nonograms.CellState;
-        var width = actualGrid.width;
-        var height = actualGrid.height;
+    _findUnknownCell(actualGrid, guessGrid) {
+        const width = actualGrid.width;
+        const height = actualGrid.height;
 
         // First, check if there are any unknown cells at all
-        var unknownCells = [];
-        guessGrid.forEach(function (x, y, guessValue) {
+        const unknownCells = [];
+        guessGrid.forEach((x, y, guessValue) => {
             if (guessValue === CellState.UNKNOWN) {
                 unknownCells.push({x: x, y: y});
             }
@@ -107,8 +95,8 @@ dfd.nonograms.HintProvider.prototype = {
         }
 
         // Pick a random unknown cell
-        var randomIndex = this._srand.randomIntegerIn(0, unknownCells.length - 1);
-        var cell = unknownCells[randomIndex];
+        const randomIndex = this._srand.randomIntegerIn(0, unknownCells.length - 1);
+        const cell = unknownCells[randomIndex];
 
         return {
             x: cell.x,
@@ -116,6 +104,4 @@ dfd.nonograms.HintProvider.prototype = {
             value: actualGrid.get(cell.x, cell.y)
         };
     }
-};
-
-}(window);
+}

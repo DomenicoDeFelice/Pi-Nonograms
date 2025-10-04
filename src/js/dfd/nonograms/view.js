@@ -20,70 +20,64 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global, $) {
+import { Event } from '../event.js';
+import { CellState } from './constants.js';
 
-if (!global.dfd) {
-    global.dfd = {};
-}
+// jQuery ($) is used as a global - it's loaded separately
+export class View {
+    constructor(model, container) {
+        this._model      = model;
+        this._$container = $(container);
+        this._$nonogram  = null;
+        this._theme      = 'classic';
 
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
+        let id;
+        do {
+            id = 'nonogram-' + window.dfd.Srand.randomIntegerIn(0, 1000000, Math.random());
+        } while ($('#' + id).length);
+        this._id = id;
 
-dfd.nonograms.View = function (model, container) {
-    this._model      = model;
-    this._$container = $(container);
-    this._$nonogram  = null;
-    this._theme      = 'classic';
+        // Events fired by the View
+        this.events = {};
 
-    var id;
-    do {
-        id = 'nonogram-' + dfd.Srand.randomIntegerIn(0, 1000000, Math.random());
-    } while ($('#' + id).length);
-    this._id = id;
+        this.events.mouseDownOnCell = new Event(this);
+        this.events.mouseUp         = new Event(this);
+        this.events.mouseEntersCell = new Event(this);
+        this.events.mouseLeavesCell = new Event(this);
+    }
 
-    // Events fired by the View
-    this.events = {};
-
-    this.events.mouseDownOnCell = new dfd.Event(this);
-    this.events.mouseUp         = new dfd.Event(this);
-    this.events.mouseEntersCell = new dfd.Event(this);
-    this.events.mouseLeavesCell = new dfd.Event(this);
-}
-
-dfd.nonograms.View.prototype = {
-    show: function () {
+    show() {
         this.rebuildNonogram();
-    },
+    }
 
-    setSolved: function () {
+    setSolved() {
         this._$nonogram.removeClass('nonogram_playing').addClass('nonogram_solved');
-    },
+    }
 
-    setUnsolved: function () {
+    setUnsolved() {
         this._$nonogram.removeClass('nonogram_solved').addClass('nonogram_playing');
-    },
+    }
 
-    setTheme: function (theme) {
+    setTheme(theme) {
         if (this._$nonogram) {
             this._$nonogram.removeClass(this._theme).addClass(theme);
         }
         this._theme = theme;
-    },
+    }
 
-    highlightColumn: function (col) {
+    highlightColumn(col) {
         this._$container.find('.nonogram_column_' + col + '_cell').addClass('nonogram_hovered_column');
         this._$container.find('#' + this._idOfColumnDefinition(col)).addClass('nonogram_hovered_column');
-    },
+    }
 
-    unhighlightColumn: function (col) {
+    unhighlightColumn(col) {
         this._$container.find('.nonogram_column_' + col + '_cell').removeClass('nonogram_hovered_column');
         this._$container.find('#' + this._idOfColumnDefinition(col)).removeClass('nonogram_hovered_column');
-    },
+    }
 
-    setGuessAt: function (x, y, newGuess) {
-        var cell = $('#' + this._idOfCell(x, y));
-        var oldGuess = cell.data().guess;
+    setGuessAt(x, y, newGuess) {
+        const cell = $('#' + this._idOfCell(x, y));
+        const oldGuess = cell.data().guess;
 
         cell
             .removeClass('nonogram_correct_guess')
@@ -98,14 +92,14 @@ dfd.nonograms.View.prototype = {
         // Update row & column definitions
         $('#' + this._idOfRowDefinition(y)).html(this._rowDefinitionToHTML(this._model.getRowDefinition(y)));
         $('#' + this._idOfColumnDefinition(x)).html(this._columnDefinitionToHTML(this._model.getColumnDefinition(x)));
-    },
+    }
 
-    rebuildNonogram: function () {
-        var width  = this._model.width,
-        height = this._model.height;
-        var x, y, tr;
+    rebuildNonogram() {
+        const width  = this._model.width;
+        const height = this._model.height;
+        let x, y, tr;
 
-        var table = this._$nonogram = $('<table>').attr('id', this._id).addClass('nonogram').addClass(this._theme);
+        const table = this._$nonogram = $('<table>').attr('id', this._id).addClass('nonogram').addClass(this._theme);
 
         if (this._model.isSolved()) {
             table.addClass('nonogram_solved');
@@ -181,24 +175,23 @@ dfd.nonograms.View.prototype = {
             .empty()
             .append(table)
             .show();
-
-    },
+    }
 
     // Private methods
-    _setupEventHandlers: function ($target) {
-        var view = this;
+    _setupEventHandlers($target) {
+        const view = this;
 
-        $target.on('mousedown', 'td', function (e) {
+        $target.on('mousedown', 'td', (e) => {
             // Only take in consideration left button clicks
             if (e.which !== 1) return;
 
             e.preventDefault();
 
-            var cellData = $(e.target).data();
+            const cellData = $(e.target).data();
             view.events.mouseDownOnCell.notify(cellData);
         });
 
-        var mouseup_handler = function () {
+        const mouseup_handler = () => {
             // Has the nonogram been removed from the DOM?
             if (!$.contains(document, $target[0])) {
                 // If it has been removed, unbind this event handler
@@ -209,40 +202,40 @@ dfd.nonograms.View.prototype = {
             } else {
                 view.events.mouseUp.notify();
             }
-        }
+        };
         $(document).on('mouseup', mouseup_handler);
 
-        $target.on('mouseover', 'td', function (e) {
+        $target.on('mouseover', 'td', (e) => {
             e.preventDefault();
 
-            var cellData = $(e.target).data();
+            const cellData = $(e.target).data();
             view.events.mouseEntersCell.notify(cellData);
         });
 
-        $target.on('mouseout', 'td', function (e) {
+        $target.on('mouseout', 'td', (e) => {
             e.preventDefault();
 
-            var cellData = $(e.target).data();
+            const cellData = $(e.target).data();
             view.events.mouseLeavesCell.notify(cellData);
         });
-    },
+    }
 
-    _idOfCell: function (x, y) {
+    _idOfCell(x, y) {
         return this._id + '_x_' + x + '_y_' + y;
-    },
+    }
 
-    _idOfRowDefinition: function (row) {
+    _idOfRowDefinition(row) {
         return this._id + '_row_' + row + '_definition';
-    },
+    }
 
-    _idOfColumnDefinition: function (col) {
+    _idOfColumnDefinition(col) {
         return this._id + '_column_' + col + '_definition';
-    },
+    }
 
-    _rowDefinitionToHTML: function (sequences) {
-        var html = '<nobr>';
-        var nSeq = sequences.length;
-        for (var index = 0; index < nSeq; index++) {
+    _rowDefinitionToHTML(sequences) {
+        let html = '<nobr>';
+        const nSeq = sequences.length;
+        for (let index = 0; index < nSeq; index++) {
             if (index) html += '&nbsp;';
             html += '<span class="nonogram_sequence';
             if (sequences[index].solved) {
@@ -252,12 +245,12 @@ dfd.nonograms.View.prototype = {
         }
         html += '</nobr>';
         return html;
-    },
-    
-    _columnDefinitionToHTML: function (sequences) {
-        var html = '';
-        var nSeq = sequences.length;
-        for (var index = 0; index < nSeq; index++) {
+    }
+
+    _columnDefinitionToHTML(sequences) {
+        let html = '';
+        const nSeq = sequences.length;
+        for (let index = 0; index < nSeq; index++) {
             if (index) html += '<br>';
             html += '<nobr><span class="nonogram_sequence';
             if (sequences[index].solved) {
@@ -266,13 +259,13 @@ dfd.nonograms.View.prototype = {
             html += '">' + sequences[index].length + '</span></nobr>';
         }
         return html;
-    },
+    }
 
-    _CSSClassesForCell: function (x, y) {
-        var cellGuess  = this._model.getGuessAt(x, y);
-        var actualCell = this._model.getCellAt(x, y);
+    _CSSClassesForCell(x, y) {
+        const cellGuess  = this._model.getGuessAt(x, y);
+        const actualCell = this._model.getCellAt(x, y);
 
-        var classes = [];
+        const classes = [];
 
         classes.push('nonogram_cell');
         classes.push('nonogram_column_' + x + '_cell');
@@ -283,17 +276,14 @@ dfd.nonograms.View.prototype = {
         }
 
         return classes.join(' ');
-    },
+    }
 
-    _guessToCSSClass: function (guess) {
-        var CellState = dfd.nonograms.CellState;
+    _guessToCSSClass(guess) {
         // Handle both constant values and legacy string values
-        var guessValue = guess;
+        let guessValue = guess;
         if (guess === CellState.UNKNOWN || guess === CellState.FILLED || guess === CellState.EMPTY) {
             guessValue = guess;
         }
         return 'nonogram_' + guessValue + '_cell';
     }
-};
-
-}(window, jQuery);
+}

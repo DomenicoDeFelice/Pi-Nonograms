@@ -1,6 +1,12 @@
-var nonogram;
+import { Nonogram, GameMode } from '../src/js/main.js';
 
-var difficultyLabels = {
+// jQuery and Srand are loaded as globals from CDN
+const $ = window.jQuery;
+const Srand = window.dfd.Srand;
+
+let nonogram;
+
+const difficultyLabels = {
     2: "very easy",
     3: "easy",
     4: "normal",
@@ -14,50 +20,50 @@ function densityFromDifficulty(difficulty) {
 }
 
 function playNonogram(nonogramId) {
-    var width  = $("#width").val();
-    var height = $("#height").val();
-    var theme  = $("#theme").val();
+    const width  = $("#width").val();
+    const height = $("#height").val();
+    const theme  = $("#theme").val();
 
     // nonogramId is used as seed for the pseudo-random numbers
     // generator (same seed generates same nonogram).
     // If nonogramId is undefined, a random seed is set.
-    var srand = new Srand(nonogramId);
+    const srand = new Srand(nonogramId);
 
     // Gets the seed. If nonogramId is defined, seed will be equal
     // to nonogramId, otherwise it will be a randomly chosen seed.
-    var seed = srand.seed();
+    const seed = srand.seed();
 
     $("#nonogram_id").val(seed);
 
-    nonogram = new dfd.nonograms.Nonogram($("#nonogram"), {
+    nonogram = new Nonogram($("#nonogram"), {
         width:  width,
         height: height,
         theme:  theme,
         srand:  srand
     });
 
-    var difficulty = $("#difficulty_slider").slider("value");
-    var density    = densityFromDifficulty(difficulty);
+    const difficulty = $("#difficulty_slider").slider("value");
+    const density    = densityFromDifficulty(difficulty);
 
     nonogram.randomize({ density: density });
 }
 
 function playSelectedNonogram() {
-    var nonogramId = Number($("#nonogram_id").val());
+    const nonogramId = Number($("#nonogram_id").val());
 
     playNonogram(nonogramId);
 }
 
 function drawNewNonogram() {
-    var width  = $("#width").val();
-    var height = $("#height").val();
-    var theme  = $("#theme").val();
+    const width  = $("#width").val();
+    const height = $("#height").val();
+    const theme  = $("#theme").val();
 
-    nonogram = new dfd.nonograms.Nonogram($("#nonogram"), {
+    nonogram = new Nonogram($("#nonogram"), {
         width:  width,
         height: height,
         theme:  theme,
-        mode:   dfd.nonograms.GameMode.DRAW
+        mode:   GameMode.DRAW
     });
 
     nonogram.show();
@@ -70,8 +76,8 @@ $(function () {
         min:   2,
         max:   7,
         value: 4,
-        slide: function (e, ui) {
-            var difficulty = ui.value;
+        slide: (e, ui) => {
+            const difficulty = ui.value;
             $("#difficulty_label").text(difficultyLabels[difficulty]);
         }
     });
@@ -79,15 +85,15 @@ $(function () {
     $("#difficulty_label").text(difficultyLabels[$("#difficulty_slider").slider("value")]);
 
     $("#theme").change(function () {
-        var newTheme = $(this).val();
+        const newTheme = $(this).val();
         nonogram.setTheme(newTheme);
     }).click();
 
-    $("#give_hint").click(function () {
+    $("#give_hint").click(() => {
         nonogram.giveHint();
     });
 
-    $("#start_over").click(function () {
+    $("#start_over").click(() => {
         nonogram.startOver();
     });
 
@@ -95,7 +101,7 @@ $(function () {
 
     $("#play_by_id").click(playSelectedNonogram);
 
-    $("#play").click(function () {
+    $("#play").click(() => {
         playNonogram();
     }).click();
 

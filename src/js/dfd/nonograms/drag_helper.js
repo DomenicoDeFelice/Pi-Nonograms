@@ -20,49 +20,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
+export class DragHelper {
+    constructor() {
+        this._dragging = false;
+    }
 
-if (!global.dfd) {
-    global.dfd = {};
-}
-
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
-
-dfd.nonograms.DragHelper = function () {
-    this._dragging = false;
-};
-
-dfd.nonograms.DragHelper.prototype = {
-    start: function (x, y, guess) {
+    start(x, y, guess) {
         this._x1 = this._x2 = x;
         this._y1 = this._y2 = y;
         this._guess = guess;
 
         this._dragging = true;
-    },
+    }
 
-    to: function (x, y) {
+    to(x, y) {
         this._x2 = x;
         this._y2 = y;
-    },
+    }
 
-    stop: function () {
+    stop() {
         this._dragging = false;
-    },
+    }
 
-    isDragging: function () {
+    isDragging() {
         return this._dragging;
-    },
+    }
 
-    iterateOverDraggedCells: function (fn) {
-        var x1 = this._x1;
-        var y1 = this._y1;
-        var x2 = this._x2;
-        var y2 = this._y2;
+    iterateOverDraggedCells(fn) {
+        const x1 = this._x1;
+        const y1 = this._y1;
+        const x2 = this._x2;
+        const y2 = this._y2;
 
-        var fromX, toX, stepX, fromY, toY, stepY;
+        let fromX, toX, stepX, fromY, toY, stepY;
 
         if (Math.abs(x1-x2) > Math.abs(y1-y2)) {
             // Horizontal Line
@@ -94,10 +84,8 @@ dfd.nonograms.DragHelper.prototype = {
             }
         }
 
-        for (var x = fromX, y = fromY; x <= toX && y <= toY; x += stepX, y += stepY) {
+        for (let x = fromX, y = fromY; x <= toX && y <= toY; x += stepX, y += stepY) {
             fn(x, y, this._guess);
         }
     }
-};
-
-}(window);
+}

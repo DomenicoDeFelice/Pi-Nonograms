@@ -20,39 +20,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
-
-if (!global.dfd) {
-    global.dfd = {};
-}
-
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
+import { CellState } from './constants.js';
 
 /**
  * NonogramGenerator - Generates random nonogram puzzles
  * Extracted from Model to follow Single Responsibility Principle
  */
-dfd.nonograms.NonogramGenerator = function (srand) {
-    this._srand = srand;
-};
+export class NonogramGenerator {
+    constructor(srand) {
+        this._srand = srand;
+    }
 
-dfd.nonograms.NonogramGenerator.prototype = {
     /**
      * Generate a random nonogram by filling cells based on density
      *
      * @param {Grid} grid - Empty grid to populate
      * @param {number} density - Proportion of cells to fill (0.0 to 1.0)
      */
-    generate: function (grid, density) {
-        var CellState = dfd.nonograms.CellState;
-        var nCells = grid.size();
-        var toBeFilled = Math.floor(nCells * density);
+    generate(grid, density) {
+        const nCells = grid.size();
+        let toBeFilled = Math.floor(nCells * density);
 
         if (toBeFilled > nCells) toBeFilled = nCells;
 
-        var index;
+        let index;
         while (toBeFilled) {
             index = this._srand.randomIntegerIn(0, nCells - 1);
             // Check if cell is empty (not yet filled)
@@ -62,6 +53,4 @@ dfd.nonograms.NonogramGenerator.prototype = {
             }
         }
     }
-};
-
-}(window);
+}

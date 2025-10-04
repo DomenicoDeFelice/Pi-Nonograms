@@ -20,27 +20,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
-
-if (!global.dfd) {
-    global.dfd = {};
-}
-
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
-
 // Cell state constants
-dfd.nonograms.CellState = {
+export const CellState = {
     UNKNOWN: 'unknown',
     FILLED: 'filled',
     EMPTY: 'empty'
 };
 
 // Game mode constants
-dfd.nonograms.GameMode = {
+export const GameMode = {
     PLAY: 'play',
     DRAW: 'draw'
 };
-
-}(window);

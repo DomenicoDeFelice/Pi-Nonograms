@@ -20,70 +20,65 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
+import { Event } from '../event.js';
+import { Grid } from './grid.js';
+import { CellState, GameMode } from './constants.js';
+import { DefinitionCalculator } from './definition_calculator.js';
+import { HintProvider } from './hint_provider.js';
+import { NonogramGenerator } from './nonogram_generator.js';
 
-if (!global.dfd) {
-    global.dfd = {};
-}
+export class Model {
+    constructor(opts) {
+        if (!opts) opts = {};
 
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
+        this.width  = opts.width;
+        this.height = opts.height;
 
-dfd.nonograms.Model = function (opts) {
-    if (!opts) opts = {};
+        // Initialize helper classes
+        this._definitionCalc = new DefinitionCalculator();
+        this._hintProvider = new HintProvider(opts.srand);
+        this._generator = new NonogramGenerator(opts.srand);
 
-    this.width  = opts.width;
-    this.height = opts.height;
+        // Events fired by the model
+        this.events = {};
 
-    // Initialize helper classes
-    this._definitionCalc = new dfd.nonograms.DefinitionCalculator();
-    this._hintProvider = new dfd.nonograms.HintProvider(opts.srand);
-    this._generator = new dfd.nonograms.NonogramGenerator(opts.srand);
+        // The user guessed the content of a cell
+        this.events.guessChanged     = new Event(this);
+        // The nonogram has been changed
+        this.events.nonogramChanged  = new Event(this);
+        // The user solved the nonogram
+        this.events.nonogramSolved   = new Event(this);
+        // The nonogram was solved but now it isn't
+        this.events.nonogramUnsolved = new Event(this);
 
-    // Events fired by the model
-    this.events = {};
+        this._setupNonogram();
+        this.setMode(opts.mode);
+    }
 
-    // The user guessed the content of a cell
-    this.events.guessChanged     = new dfd.Event(this);
-    // The nonogram has been changed
-    this.events.nonogramChanged  = new dfd.Event(this);
-    // The user solved the nonogram
-    this.events.nonogramSolved   = new dfd.Event(this);
-    // The nonogram was solved but now it isn't
-    this.events.nonogramUnsolved = new dfd.Event(this);
-
-    this._setupNonogram();
-    this.setMode(opts.mode);
-};
-
-
-dfd.nonograms.Model.prototype = {
     // Returns the state of a cell.
     // Arguments can be the x and y coordinates of the cell or
     // the index of the cell (second argument not passed)
-    getCellAt: function (x, y) {
+    getCellAt(x, y) {
         return this._actual.get(x, y);
-    },
+    }
 
-    getGuessAt: function (x, y) {
+    getGuessAt(x, y) {
         return this._guess.get(x, y);
-    },
+    }
 
-    setGuessAt: function (x, y, guess) {
-        var GameMode = dfd.nonograms.GameMode;
-        var index;
+    setGuessAt(x, y, guess) {
+        let index;
 
         if (guess === undefined) {
             // Shift arguments - called with (index, guess)
             guess = y;
             index = x;
-            var xy = this._actual._XYFromIndex(index);
+            const xy = this._actual._XYFromIndex(index);
             x = xy[0];
             y = xy[1];
         }
 
-        var oldGuess = this.getGuessAt(x, y);
+        const oldGuess = this.getGuessAt(x, y);
         this._guess.set(x, y, guess);
 
         this.events.guessChanged.notify({
@@ -94,16 +89,13 @@ dfd.nonograms.Model.prototype = {
         });
 
         if (this._mode === GameMode.PLAY) this._checkIfSolved();
-    },
+    }
 
-    getMode: function () {
+    getMode() {
         return this._mode;
-    },
+    }
 
-    setMode: function (mode) {
-        var GameMode = dfd.nonograms.GameMode;
-        var CellState = dfd.nonograms.CellState;
-
+    setMode(mode) {
         if (mode === this._mode) return;
 
         this._mode = mode;
@@ -113,57 +105,50 @@ dfd.nonograms.Model.prototype = {
             this._guess = this._actual;
         } else {
             // In play mode, create new empty guess grid with UNKNOWN default
-            this._guess = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
+            this._guess = new Grid(this.width, this.height, CellState.UNKNOWN);
         }
 
         this._setUnsolved();
         this.events.nonogramChanged.notify();
-    },
+    }
 
-    isSolved: function () {
+    isSolved() {
         return this._solved;
-    },
+    }
 
-    getRowDefinition: function (row) {
-        var actualCells = this._actual.getRow(row);
-        var guessCells = this._guess.getRow(row);
+    getRowDefinition(row) {
+        const actualCells = this._actual.getRow(row);
+        const guessCells = this._guess.getRow(row);
         return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
-    },
+    }
 
-    getColumnDefinition: function (col) {
-        var actualCells = this._actual.getColumn(col);
-        var guessCells = this._guess.getColumn(col);
+    getColumnDefinition(col) {
+        const actualCells = this._actual.getColumn(col);
+        const guessCells = this._guess.getColumn(col);
         return this._definitionCalc.calculateLineDefinition(actualCells, guessCells, this._mode);
-    },
+    }
 
-    giveHint: function () {
-        var GameMode = dfd.nonograms.GameMode;
-
+    giveHint() {
         // Is there any hint to give?
         if (this.isSolved() || this._mode !== GameMode.PLAY) return;
 
-        var hint = this._hintProvider.findHint(this._actual, this._guess);
+        const hint = this._hintProvider.findHint(this._actual, this._guess);
         if (hint) {
             this.setGuessAt(hint.x, hint.y, hint.value);
         }
-    },
+    }
 
-    randomize: function (density) {
-        var GameMode = dfd.nonograms.GameMode;
-
+    randomize(density) {
         this._setupNonogram();
         this._mode = GameMode.PLAY;
 
         this._generator.generate(this._actual, density);
 
         this.events.nonogramChanged.notify();
-    },
+    }
 
-    resetGuesses: function () {
-        var GameMode = dfd.nonograms.GameMode;
-        var CellState = dfd.nonograms.CellState;
-
-        this._guess = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
+    resetGuesses() {
+        this._guess = new Grid(this.width, this.height, CellState.UNKNOWN);
         if (this._mode === GameMode.DRAW) {
             this._actual = this._guess;
         }
@@ -171,37 +156,34 @@ dfd.nonograms.Model.prototype = {
         this._solved = false;
 
         this.events.nonogramChanged.notify();
-    },
+    }
 
     // Private methods
-    _setupNonogram: function () {
-        var CellState = dfd.nonograms.CellState;
-        this._actual = new dfd.nonograms.Grid(this.width, this.height, CellState.EMPTY);
-        this._guess  = new dfd.nonograms.Grid(this.width, this.height, CellState.UNKNOWN);
+    _setupNonogram() {
+        this._actual = new Grid(this.width, this.height, CellState.EMPTY);
+        this._guess  = new Grid(this.width, this.height, CellState.UNKNOWN);
         this._setUnsolved();
-    },
+    }
 
-    _setSolved: function () {
+    _setSolved() {
         if (!this.isSolved()) {
             this._solved = true;
             this.events.nonogramSolved.notify();
         }
-    },
+    }
 
-    _setUnsolved: function () {
+    _setUnsolved() {
         if (this.isSolved()) {
             this._solved = false;
             this.events.nonogramUnsolved.notify();
         }
-    },
+    }
 
-    _checkIfSolved: function () {
-        var CellState = dfd.nonograms.CellState;
-        var model = this;
-        var solved = true;
+    _checkIfSolved() {
+        let solved = true;
 
-        this._actual.forEach(function (x, y, actualValue) {
-            var guessValue = model._guess.get(x, y);
+        this._actual.forEach((x, y, actualValue) => {
+            const guessValue = this._guess.get(x, y);
 
             if ((actualValue === CellState.FILLED && guessValue !== CellState.FILLED) ||
                 (actualValue !== CellState.FILLED && guessValue === CellState.FILLED)) {
@@ -215,6 +197,4 @@ dfd.nonograms.Model.prototype = {
             this._setUnsolved();
         }
     }
-};
-
-}(window);
+}

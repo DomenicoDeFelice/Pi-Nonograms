@@ -20,105 +20,95 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-!function (global) {
+import { CellState } from './constants.js';
+import { DragHelper } from './drag_helper.js';
 
-if (!global.dfd) {
-    global.dfd = {};
-}
+export class Controller {
+    constructor(model, view) {
+        this._dragHelper = new DragHelper();
 
-if (!dfd.nonograms) {
-    dfd.nonograms = {};
-}
+        this._model = model;
+        this._view = view;
+        const controller = this;
 
-dfd.nonograms.Controller = function (model, view) {
-    this._dragHelper = new dfd.nonograms.DragHelper();
+        // Application Logic
+        model.events.nonogramChanged.attach(() => {
+            view.rebuildNonogram();
+        });
 
-    this._model = model;
-    this._view = view;
-    var controller = this;
+        model.events.guessChanged.attach((model, opts) => {
+            view.setGuessAt(opts.x, opts.y, opts.newGuess);
+        });
 
-    // Application Logic
-    model.events.nonogramChanged.attach(function () {
-        view.rebuildNonogram();
-    });
+        model.events.nonogramSolved.attach(() => {
+            view.setSolved();
+        });
 
-    model.events.guessChanged.attach(function (model, opts) {
-        view.setGuessAt(opts.x, opts.y, opts.newGuess);
-    });
+        model.events.nonogramUnsolved.attach(() => {
+            view.setUnsolved();
+        });
 
-    model.events.nonogramSolved.attach(function () {
-        view.setSolved();
-    });
+        view.events.mouseDownOnCell.attach((view, cell) => {
+            controller._dragHelper.start(cell.x, cell.y, controller._nextGuess(model.getGuessAt(cell.x, cell.y)));
+            controller._previewDragging();
+        });
 
-    model.events.nonogramUnsolved.attach(function () {
-        view.setUnsolved();
-    });
+        view.events.mouseUp.attach(() => {
+            if (!controller._dragHelper.isDragging())
+                return;
+            controller._dragHelper.stop();
+            controller._cancelDraggingPreview();
+            controller._applyDragging();
+        });
 
-    view.events.mouseDownOnCell.attach(function (view, cell) {
-        controller._dragHelper.start(cell.x, cell.y, controller._nextGuess(model.getGuessAt(cell.x, cell.y)));
-        controller._previewDragging();
-    });
+        view.events.mouseEntersCell.attach((view, cell) => {
+            view.highlightColumn(cell.x);
+            if (!controller._dragHelper.isDragging()) return;
 
-    view.events.mouseUp.attach(function () {
-        if (!controller._dragHelper.isDragging())
-            return;
-        controller._dragHelper.stop();
-        controller._cancelDraggingPreview();
-        controller._applyDragging();
-    });
+            controller._cancelDraggingPreview();
+            controller._dragHelper.to(cell.x, cell.y);
+            controller._previewDragging();
+        });
 
-    view.events.mouseEntersCell.attach(function (view, cell) {
-        view.highlightColumn(cell.x);
-        if (!controller._dragHelper.isDragging()) return;
+        view.events.mouseLeavesCell.attach((view, cell) => {
+            view.unhighlightColumn(cell.x);
+        });
+    }
 
-        controller._cancelDraggingPreview();
-        controller._dragHelper.to(cell.x, cell.y);
-        controller._previewDragging();
-    });
-
-    view.events.mouseLeavesCell.attach(function (view, cell) {
-        view.unhighlightColumn(cell.x);
-    });
-}
-
-dfd.nonograms.Controller.prototype = {
     // Private methods
 
     // cycles in [unknown, filled, empty]
-    _nextGuess: function (guess) {
-        var CellState = dfd.nonograms.CellState;
+    _nextGuess(guess) {
         if (guess === CellState.UNKNOWN) {
             return CellState.FILLED;
         } else if (guess === CellState.FILLED) {
             return CellState.EMPTY;
         }
         return CellState.UNKNOWN;
-    },
+    }
 
-    _previewDragging: function () {
-        var view = this._view;
+    _previewDragging() {
+        const view = this._view;
 
-        this._dragHelper.iterateOverDraggedCells(function (x, y, guess) {
+        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
             view.setGuessAt(x, y, guess);
         });
-    },
+    }
 
-    _applyDragging: function () {
-        var model = this._model;
+    _applyDragging() {
+        const model = this._model;
 
-        this._dragHelper.iterateOverDraggedCells(function (x, y, guess) {
+        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
             model.setGuessAt(x, y, guess);
         });
-    },
+    }
 
-    _cancelDraggingPreview: function () {
-        var model = this._model;
-        var view  = this._view;
+    _cancelDraggingPreview() {
+        const model = this._model;
+        const view  = this._view;
 
-        this._dragHelper.iterateOverDraggedCells(function (x, y, guess) {
+        this._dragHelper.iterateOverDraggedCells((x, y, guess) => {
             view.setGuessAt(x, y, model.getGuessAt(x, y));
         });
     }
-};
-
-}(window);
+}
