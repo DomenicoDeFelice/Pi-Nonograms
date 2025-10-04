@@ -101,7 +101,8 @@ export class Model {
         this._mode = mode;
 
         if (mode === GameMode.DRAW) {
-            // In draw mode, guess and actual are the same
+            // In draw mode, start with unknown cells and guess/actual are the same
+            this._actual = new Grid(this.width, this.height, CellState.UNKNOWN);
             this._guess = this._actual;
         } else {
             // In play mode, create new empty guess grid with UNKNOWN default
