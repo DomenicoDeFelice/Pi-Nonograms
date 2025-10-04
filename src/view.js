@@ -23,19 +23,18 @@
 import { Event } from './event.js';
 import { CellState } from './constants.js';
 
-// jQuery ($) is used as a global - it's loaded separately
 export class View {
     constructor(model, container) {
         this._model      = model;
-        this._$container = $(container);
-        this._$nonogram  = null;
+        this._container  = typeof container === 'string' ? document.querySelector(container) : container;
+        this._nonogram   = null;
         this._theme      = 'classic';
 
         let id;
         do {
             const random = Math.random();
             id = 'nonogram-' + Math.floor(random * 1000001);
-        } while ($('#' + id).length);
+        } while (document.getElementById(id));
         this._id = id;
 
         // Events fired by the View
@@ -52,47 +51,62 @@ export class View {
     }
 
     setSolved() {
-        this._$nonogram.removeClass('nonogram_playing').addClass('nonogram_solved');
+        this._nonogram.classList.remove('nonogram_playing');
+        this._nonogram.classList.add('nonogram_solved');
     }
 
     setUnsolved() {
-        this._$nonogram.removeClass('nonogram_solved').addClass('nonogram_playing');
+        this._nonogram.classList.remove('nonogram_solved');
+        this._nonogram.classList.add('nonogram_playing');
     }
 
     setTheme(theme) {
-        if (this._$nonogram) {
-            this._$nonogram.removeClass(this._theme).addClass(theme);
+        if (this._nonogram) {
+            this._nonogram.classList.remove(this._theme);
+            this._nonogram.classList.add(theme);
         }
         this._theme = theme;
     }
 
     highlightColumn(col) {
-        this._$container.find('.nonogram_column_' + col + '_cell').addClass('nonogram_hovered_column');
-        this._$container.find('#' + this._idOfColumnDefinition(col)).addClass('nonogram_hovered_column');
+        const cells = this._container.querySelectorAll('.nonogram_column_' + col + '_cell');
+        cells.forEach(cell => cell.classList.add('nonogram_hovered_column'));
+
+        const colDef = document.getElementById(this._idOfColumnDefinition(col));
+        if (colDef) {
+            colDef.classList.add('nonogram_hovered_column');
+        }
     }
 
     unhighlightColumn(col) {
-        this._$container.find('.nonogram_column_' + col + '_cell').removeClass('nonogram_hovered_column');
-        this._$container.find('#' + this._idOfColumnDefinition(col)).removeClass('nonogram_hovered_column');
+        const cells = this._container.querySelectorAll('.nonogram_column_' + col + '_cell');
+        cells.forEach(cell => cell.classList.remove('nonogram_hovered_column'));
+
+        const colDef = document.getElementById(this._idOfColumnDefinition(col));
+        if (colDef) {
+            colDef.classList.remove('nonogram_hovered_column');
+        }
     }
 
     setGuessAt(x, y, newGuess) {
-        const cell = $('#' + this._idOfCell(x, y));
-        const oldGuess = cell.data().guess;
+        const cell = document.getElementById(this._idOfCell(x, y));
+        const oldGuess = cell._cellData.guess;
 
-        cell
-            .removeClass('nonogram_correct_guess')
-            .removeClass(this._guessToCSSClass(oldGuess))
-            .addClass(this._guessToCSSClass(newGuess))
-            .data({guess: newGuess});
+        cell.classList.remove('nonogram_correct_guess');
+        cell.classList.remove(this._guessToCSSClass(oldGuess));
+        cell.classList.add(this._guessToCSSClass(newGuess));
+        cell._cellData.guess = newGuess;
 
         if (this._model.getCellAt(x, y) === newGuess) {
-            cell.addClass('nonogram_correct_guess');
+            cell.classList.add('nonogram_correct_guess');
         }
 
         // Update row & column definitions
-        $('#' + this._idOfRowDefinition(y)).html(this._rowDefinitionToHTML(this._model.getRowDefinition(y)));
-        $('#' + this._idOfColumnDefinition(x)).html(this._columnDefinitionToHTML(this._model.getColumnDefinition(x)));
+        const rowDef = document.getElementById(this._idOfRowDefinition(y));
+        rowDef.innerHTML = this._rowDefinitionToHTML(this._model.getRowDefinition(y));
+
+        const colDef = document.getElementById(this._idOfColumnDefinition(x));
+        colDef.innerHTML = this._columnDefinitionToHTML(this._model.getColumnDefinition(x));
     }
 
     rebuildNonogram() {
@@ -100,123 +114,137 @@ export class View {
         const height = this._model.height;
         let x, y, tr;
 
-        const table = this._$nonogram = $('<table>').attr('id', this._id).addClass('nonogram').addClass(this._theme);
+        const table = this._nonogram = document.createElement('table');
+        table.id = this._id;
+        table.classList.add('nonogram', this._theme);
 
         if (this._model.isSolved()) {
-            table.addClass('nonogram_solved');
+            table.classList.add('nonogram_solved');
         } else {
-            table.addClass('nonogram_playing');
+            table.classList.add('nonogram_playing');
         }
 
         // Column Definitions Row
-        tr = $('<tr>').addClass('nonogram_row');
+        tr = document.createElement('tr');
+        tr.classList.add('nonogram_row');
 
         // Top Left cell
-        $('<td>').addClass('nonogram_top_left_cell').appendTo(tr);
+        const topLeftCell = document.createElement('td');
+        topLeftCell.classList.add('nonogram_top_left_cell');
+        tr.appendChild(topLeftCell);
 
         for (x = 0; x < width; x++) {
             if (x && x % 5 === 0) {
-                $('<td>').addClass('nonogram_separation_column').appendTo(tr);
+                const sepCol = document.createElement('td');
+                sepCol.classList.add('nonogram_separation_column');
+                tr.appendChild(sepCol);
             }
 
-            $('<td>')
-                .attr('id', this._idOfColumnDefinition(x))
-                .addClass('nonogram_definition nonogram_column_definition')
-                .html(this._columnDefinitionToHTML(this._model.getColumnDefinition(x)))
-                .appendTo(tr);
+            const colDef = document.createElement('td');
+            colDef.id = this._idOfColumnDefinition(x);
+            colDef.classList.add('nonogram_definition', 'nonogram_column_definition');
+            colDef.innerHTML = this._columnDefinitionToHTML(this._model.getColumnDefinition(x));
+            tr.appendChild(colDef);
         }
-        tr.appendTo(table);
+        table.appendChild(tr);
 
         for (y = 0; y < height; y++) {
             // Separate groups of five rows
             if (y && y % 5 === 0) {
-                $('<tr>')
-                    .addClass('nonogram_separation_row')
-                    .append($('<td colspan="' + (width + width - 1) + '">'))
-                    .appendTo(table);
+                const sepRow = document.createElement('tr');
+                sepRow.classList.add('nonogram_separation_row');
+                const sepCell = document.createElement('td');
+                sepCell.setAttribute('colspan', width + width - 1);
+                sepRow.appendChild(sepCell);
+                table.appendChild(sepRow);
             }
 
             // Create new row
-            tr = $('<tr>').addClass('nonogram_row');
+            tr = document.createElement('tr');
+            tr.classList.add('nonogram_row');
 
             // Create definition for the current row
-            $('<td>')
-                .attr('id', this._idOfRowDefinition(y))
-                .addClass('nonogram_definition nonogram_row_definition')
-                .html(this._rowDefinitionToHTML(this._model.getRowDefinition(y)))
-                .appendTo(tr);
+            const rowDef = document.createElement('td');
+            rowDef.id = this._idOfRowDefinition(y);
+            rowDef.classList.add('nonogram_definition', 'nonogram_row_definition');
+            rowDef.innerHTML = this._rowDefinitionToHTML(this._model.getRowDefinition(y));
+            tr.appendChild(rowDef);
 
             for (x = 0; x < width; x++) {
                 // Separate groups of five columns
                 if (x && x % 5 === 0) {
-                    $('<td>')
-                        .addClass('nonogram_separation_column')
-                        .appendTo(tr);
+                    const sepCol = document.createElement('td');
+                    sepCol.classList.add('nonogram_separation_column');
+                    tr.appendChild(sepCol);
                 }
 
                 // Build the actual nonogram cell
-                $('<td>')
-                    .attr('id', this._idOfCell(x, y))
-                    .addClass(this._CSSClassesForCell(x, y))
-                    .data({
-                        x: x,
-                        y: y,
-                        guess: this._model.getGuessAt(x, y)
-                    })
-                    .appendTo(tr);
+                const cell = document.createElement('td');
+                cell.id = this._idOfCell(x, y);
+                cell.className = this._CSSClassesForCell(x, y);
+                cell._cellData = {
+                    x: x,
+                    y: y,
+                    guess: this._model.getGuessAt(x, y)
+                };
+                tr.appendChild(cell);
             }
-            tr.appendTo(table);
+            table.appendChild(tr);
         }
 
         this._setupEventHandlers(table);
 
-        this._$container
-            .finish()
-            .hide()
-            .empty()
-            .append(table)
-            .show();
+        this._container.style.display = 'none';
+        this._container.innerHTML = '';
+        this._container.appendChild(table);
+        this._container.style.display = '';
     }
 
     // Private methods
-    _setupEventHandlers($target) {
+    _setupEventHandlers(target) {
         const view = this;
 
-        $target.on('mousedown', 'td', (e) => {
+        target.addEventListener('mousedown', (e) => {
+            if (e.target.tagName !== 'TD') return;
+
             // Only take in consideration left button clicks
-            if (e.which !== 1) return;
+            if (e.which !== 1 && e.button !== 0) return;
 
             e.preventDefault();
 
-            const cellData = $(e.target).data();
+            const cellData = e.target._cellData;
             view.events.mouseDownOnCell.notify(cellData);
         });
 
         const mouseup_handler = () => {
             // Has the nonogram been removed from the DOM?
-            if (!$.contains(document, $target[0])) {
+            if (!document.contains(target)) {
                 // If it has been removed, unbind this event handler
                 // from document to avoid memory leaks (the references
-                // to `view` and `$target` make it impossible for the
+                // to `view` and `target` make it impossible for the
                 // garbage collector to free them).
-                 $(document).unbind('mouseup', mouseup_handler);
+                document.removeEventListener('mouseup', mouseup_handler);
             } else {
                 view.events.mouseUp.notify();
             }
         };
-        $(document).on('mouseup', mouseup_handler);
+        document.addEventListener('mouseup', mouseup_handler);
 
-        $target.on('mouseover', 'td', (e) => {
+        target.addEventListener('mouseover', (e) => {
+            if (e.target.tagName !== 'TD') return;
+
             e.preventDefault();
 
-            const cellData = $(e.target).data();
+            const cellData = e.target._cellData;
             view.events.mouseEntersCell.notify(cellData);
         });
 
-        $target.on('mouseout', 'td', (e) => {
+        target.addEventListener('mouseout', (e) => {
+            if (e.target.tagName !== 'TD') return;
+
             e.preventDefault();
 
-            const cellData = $(e.target).data();
+            const cellData = e.target._cellData;
             view.events.mouseLeavesCell.notify(cellData);
         });
     }

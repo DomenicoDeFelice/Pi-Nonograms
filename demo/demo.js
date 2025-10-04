@@ -1,8 +1,5 @@
 import { Nonogram, GameMode, Srand } from '../src/main.js';
 
-// jQuery is loaded as a global from CDN
-const $ = window.jQuery;
-
 let nonogram;
 
 const difficultyLabels = {
@@ -19,9 +16,9 @@ function densityFromDifficulty(difficulty) {
 }
 
 function playNonogram(nonogramId) {
-    const width  = $("#width").val();
-    const height = $("#height").val();
-    const theme  = $("#theme").val();
+    const width  = document.getElementById('width').value;
+    const height = document.getElementById('height').value;
+    const theme  = document.getElementById('theme').value;
 
     // nonogramId is used as seed for the pseudo-random numbers
     // generator (same seed generates same nonogram).
@@ -32,33 +29,33 @@ function playNonogram(nonogramId) {
     // to nonogramId, otherwise it will be a randomly chosen seed.
     const seed = srand.seed();
 
-    $("#nonogram_id").val(seed);
+    document.getElementById('nonogram_id').value = seed;
 
-    nonogram = new Nonogram($("#nonogram"), {
+    nonogram = new Nonogram(document.getElementById('nonogram'), {
         width:  width,
         height: height,
         theme:  theme,
         srand:  srand
     });
 
-    const difficulty = $("#difficulty_slider").slider("value");
+    const difficulty = document.getElementById('difficulty_slider').value;
     const density    = densityFromDifficulty(difficulty);
 
     nonogram.randomize({ density: density });
 }
 
 function playSelectedNonogram() {
-    const nonogramId = Number($("#nonogram_id").val());
+    const nonogramId = Number(document.getElementById('nonogram_id').value);
 
     playNonogram(nonogramId);
 }
 
 function drawNewNonogram() {
-    const width  = $("#width").val();
-    const height = $("#height").val();
-    const theme  = $("#theme").val();
+    const width  = document.getElementById('width').value;
+    const height = document.getElementById('height').value;
+    const theme  = document.getElementById('theme').value;
 
-    nonogram = new Nonogram($("#nonogram"), {
+    nonogram = new Nonogram(document.getElementById('nonogram'), {
         width:  width,
         height: height,
         theme:  theme,
@@ -68,41 +65,52 @@ function drawNewNonogram() {
     nonogram.show();
 }
 
-$(function () {
-    $("#demo").hide();
+document.addEventListener('DOMContentLoaded', function () {
+    const demoElement = document.getElementById('demo');
+    const difficultySlider = document.getElementById('difficulty_slider');
+    const difficultyLabel = document.getElementById('difficulty_label');
+    const themeSelect = document.getElementById('theme');
 
-    $("#difficulty_slider").slider({
-        min:   2,
-        max:   7,
-        value: 4,
-        slide: (e, ui) => {
-            const difficulty = ui.value;
-            $("#difficulty_label").text(difficultyLabels[difficulty]);
-        }
+    demoElement.style.display = 'none';
+
+    // Update difficulty label when slider changes
+    difficultySlider.addEventListener('input', function () {
+        const difficulty = this.value;
+        difficultyLabel.textContent = difficultyLabels[difficulty];
     });
 
-    $("#difficulty_label").text(difficultyLabels[$("#difficulty_slider").slider("value")]);
+    // Initialize difficulty label
+    difficultyLabel.textContent = difficultyLabels[difficultySlider.value];
 
-    $("#theme").change(function () {
-        const newTheme = $(this).val();
+    themeSelect.addEventListener('change', function () {
+        const newTheme = this.value;
         nonogram.setTheme(newTheme);
-    }).click();
+    });
+    themeSelect.click();
 
-    $("#give_hint").click(() => {
+    document.getElementById('give_hint').addEventListener('click', function () {
         nonogram.giveHint();
     });
 
-    $("#start_over").click(() => {
+    document.getElementById('start_over').addEventListener('click', function () {
         nonogram.startOver();
     });
 
-    $("#draw_nonogram").click(drawNewNonogram);
+    document.getElementById('draw_nonogram').addEventListener('click', drawNewNonogram);
 
-    $("#play_by_id").click(playSelectedNonogram);
+    document.getElementById('play_by_id').addEventListener('click', playSelectedNonogram);
 
-    $("#play").click(() => {
+    const playButton = document.getElementById('play');
+    playButton.addEventListener('click', function () {
         playNonogram();
-    }).click();
+    });
+    playButton.click();
 
-    $("#demo").fadeIn(1500);
+    // Fade in demo element
+    demoElement.style.opacity = '0';
+    demoElement.style.display = 'block';
+    demoElement.style.transition = 'opacity 1.5s';
+    setTimeout(() => {
+        demoElement.style.opacity = '1';
+    }, 10);
 });
