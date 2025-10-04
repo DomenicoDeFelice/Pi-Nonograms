@@ -20,10 +20,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/**
- * Grid - A 2D grid data structure to replace flat array storage
- * Provides cleaner API for coordinate-based access
- */
 export class Grid {
     constructor(width, height, defaultValue) {
         this.width = width;
@@ -31,6 +27,7 @@ export class Grid {
         this._defaultValue = defaultValue; // Value to return for unset cells
         this._data = new Array(width * height);
     }
+
     // Get cell value at coordinates or index
     get(x, y) {
         let index;
@@ -104,11 +101,6 @@ export class Grid {
             cloned._data[i] = this._data[i];
         }
         return cloned;
-    }
-
-    // Get direct access to underlying array (for backward compatibility)
-    _getArray() {
-        return this._data;
     }
 
     // Coordinate conversion helpers

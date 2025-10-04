@@ -23,8 +23,7 @@
 import { CellState, GameMode } from './constants.js';
 
 /**
- * DefinitionCalculator - Calculates row/column definitions (clue numbers)
- * Extracted from Model to follow Single Responsibility Principle
+ * Calculates row/column definitions (clue numbers).
  */
 export class DefinitionCalculator {
     /**

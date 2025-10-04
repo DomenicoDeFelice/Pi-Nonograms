@@ -23,8 +23,7 @@
 import { CellState } from './constants.js';
 
 /**
- * NonogramGenerator - Generates random nonogram puzzles
- * Extracted from Model to follow Single Responsibility Principle
+ * Generates random nonogram puzzles.
  */
 export class NonogramGenerator {
     constructor(srand) {

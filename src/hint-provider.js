@@ -23,8 +23,7 @@
 import { CellState } from './constants.js';
 
 /**
- * HintProvider - Provides hints for solving the nonogram
- * Extracted from Model to follow Single Responsibility Principle
+ * Provides hints for solving the nonogram.
  */
 export class HintProvider {
     constructor(srand) {
