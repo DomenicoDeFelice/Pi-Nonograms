@@ -24,6 +24,7 @@ import { GameMode, GameModeType } from './constants.js';
 import { Model } from './model.js';
 import { View } from './view.js';
 import { Controller } from './controller.js';
+import { VictoryDialog } from './victory-dialog.js';
 import Srand from 'seeded-rand';
 
 export interface NonogramOptions {
@@ -43,12 +44,17 @@ const DEFAULT_OPTIONS: Required<NonogramOptions> = {
     theme: 'classic',
     srand: new Srand(),
     onSolved: () => {
-        alert('Congratulations! Nonogram solved!');
+        // Lazily create victory dialog
+        if (!Nonogram.victoryDialog) {
+            Nonogram.victoryDialog = new VictoryDialog();
+        }
+        Nonogram.victoryDialog.show();
     },
 };
 
 export class Nonogram {
     static options = DEFAULT_OPTIONS;
+    static victoryDialog: VictoryDialog | null = null;
 
     private model: Model;
     private view: View;

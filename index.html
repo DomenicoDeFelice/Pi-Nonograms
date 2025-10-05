@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <meta charset="UTF-8" />
         <title>Pi Nonograms - Play nonograms on-line</title>
         <link rel="icon" type="image/png" href="/favicon.ico" />
         <link rel="stylesheet" href="demo/demo.css" />
@@ -107,6 +108,15 @@
         <a href="http://disqus.com" class="dsq-brlink"
             >comments powered by <span class="logo-disqus">Disqus</span></a
         >
+
+        <dialog id="victory-dialog">
+            <div class="victory-content">
+                <h2>🎉 Congratulations!</h2>
+                <p>Nonogram solved!</p>
+                <button class="victory-close">Close</button>
+            </div>
+        </dialog>
+
         <script type="module" src="demo/demo.ts"></script>
     </body>
 </html>

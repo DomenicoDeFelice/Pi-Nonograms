@@ -113,3 +113,57 @@ h1 {
     margin-top: 50px;
     background-color: var(--color-disqus-bg);
 }
+
+/* Victory Dialog */
+#victory-dialog {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+.victory-content {
+    padding: 40px 32px 32px;
+    text-align: center;
+
+    & h2 {
+        margin: 0 0 16px 0;
+        font-size: 2em;
+        color: #2c3e50;
+    }
+
+    & p {
+        margin: 0 0 24px 0;
+        font-size: 1.2em;
+        color: #555;
+    }
+}
+
+.victory-close {
+    background: linear-gradient(to bottom, #4caf50, #45a049);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        transform 0.1s,
+        box-shadow 0.2s;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
