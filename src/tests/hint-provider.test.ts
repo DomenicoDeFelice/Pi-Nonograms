@@ -23,7 +23,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { HintProvider } from '../hint-provider.js';
 import { Grid } from '../grid.js';
-import { CellState } from '../constants.js';
+import { CellState, CellStateType } from '../constants.js';
 import Srand from 'seeded-rand';
 
 describe('HintProvider', () => {

@@ -23,11 +23,5 @@ export default tseslint.config(
             '@typescript-eslint/no-explicit-any': 'warn',
             'prettier/prettier': 'warn',
         },
-    },
-    {
-        files: ['**/*.test.ts', 'e2e/**/*.ts'],
-        rules: {
-            '@typescript-eslint/no-unsafe-argument': 'off',
-        },
     }
 );
