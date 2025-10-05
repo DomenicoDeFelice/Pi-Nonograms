@@ -7,4 +7,6 @@ Nonograms are logic puzzles in which cells in a grid must be filled or left blan
 
 You are free to embed this game in your own website. Please add a link back if you do so.
 
+You can test the game locally using Vite: `pnpm vite`.
+
 _&pi; nonograms is free software licensed under the GNU GPLv3 license._
