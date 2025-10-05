@@ -115,7 +115,6 @@ test.describe('Nonogram Game', () => {
         await page.click('#give_hint');
 
         // Check that at least one cell changed state (was revealed)
-        const cells = page.locator('td.nonogram_cell');
         const filledCells = page.locator('td.nonogram_filled_cell');
         const emptyCells = page.locator('td.nonogram_empty_cell');
 
