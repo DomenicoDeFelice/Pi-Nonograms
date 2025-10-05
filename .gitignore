@@ -5,6 +5,11 @@ pnpm-lock.yaml
 # Build output
 dist/
 
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
+
 # IDE
 .vscode/
 .idea/
