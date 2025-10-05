@@ -8,6 +8,19 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: 'index.html',
+                sw: 'sw.js',
+                manifest: 'manifest.json',
+            },
+            output: {
+                entryFileNames: (chunkInfo) => {
+                    return chunkInfo.name === 'sw' ? 'sw.js' : 'assets/[name]-[hash].js';
+                },
+                assetFileNames: (assetInfo) => {
+                    if (assetInfo.name === 'manifest.json') {
+                        return 'manifest.json';
+                    }
+                    return 'assets/[name]-[hash].[ext]';
+                },
             },
         },
     },

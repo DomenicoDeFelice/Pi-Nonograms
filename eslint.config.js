@@ -15,7 +15,14 @@ export default tseslint.config(
         },
     },
     {
-        ignores: ['dist/**', 'node_modules/**', '*.config.js', 'vite.config.js', 'coverage/**'],
+        ignores: [
+            'dist/**',
+            'node_modules/**',
+            '*.config.js',
+            'vite.config.js',
+            'coverage/**',
+            'sw.js',
+        ],
     },
     {
         rules: {

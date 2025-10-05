@@ -1,0 +1,25 @@
+{
+    "name": "Pi Nonograms",
+    "short_name": "Nonograms",
+    "description": "Play nonograms (griddlers) online - A logic puzzle game",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#6d6d6d",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/pinonograms.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/favicon.ico",
+            "sizes": "48x48",
+            "type": "image/x-icon"
+        }
+    ],
+    "categories": ["games", "entertainment"],
+    "screenshots": []
+}

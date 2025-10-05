@@ -1,4 +1,5 @@
 import { Nonogram, GameMode, Srand } from '../src/main.js';
+import { registerServiceWorker } from '../src/pwa.js';
 
 let nonogram: Nonogram;
 
@@ -115,4 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         demoElement.style.opacity = '1';
     }, 10);
+
+    // Register service worker for PWA support
+    registerServiceWorker();
 });
