@@ -42,9 +42,7 @@ export class NonogramGenerator {
      */
     generate(grid: Grid<CellStateType>, density: number): void {
         const nCells = grid.size();
-        let toBeFilled = Math.floor(nCells * density);
-
-        if (toBeFilled > nCells) toBeFilled = nCells;
+        let toBeFilled = Math.min(nCells, Math.floor(nCells * density));
 
         let index: number;
         while (toBeFilled) {

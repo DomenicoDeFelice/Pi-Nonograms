@@ -138,14 +138,25 @@ test.describe('Visual Regression Tests', () => {
         await page.selectOption('#theme', 'classic');
         await page.click('#play_by_id');
 
-        // Repeatedly click hint until puzzle is solved
-        // (In a real scenario, this might trigger a "solved" alert/state)
+        // Click hints until puzzle is solved (dialog appears)
+        // The dialog will block further clicks, so we check for it
         for (let i = 0; i < 9; i++) {
+            // Check if dialog appeared (puzzle solved)
+            const dialogVisible = await page.locator('#victory-dialog[open]').count();
+            if (dialogVisible > 0) {
+                break;
+            }
             await page.click('#give_hint');
-            await page.waitForTimeout(50);
+            await page.waitForTimeout(100);
         }
 
-        // Check if puzzle state changed
+        // Wait for victory dialog to appear
+        await page.waitForSelector('#victory-dialog[open]', { timeout: 2000 });
+
+        // Close the victory dialog
+        await page.click('.victory-close');
+
+        // Wait for dialog to close
         await page.waitForTimeout(100);
 
         await expect(page.locator('table.nonogram.classic')).toHaveScreenshot(
@@ -169,6 +180,9 @@ test.describe('Visual Regression Tests', () => {
             await page.locator('td.nonogram_cell').nth(6).click();
             await page.locator('td.nonogram_cell').nth(6).click();
             await page.locator('td.nonogram_cell').nth(12).click();
+
+            // Move mouse away from the nonogram to avoid hover effects
+            await page.mouse.move(0, 0);
 
             await expect(page.locator(`table.nonogram.${theme}`)).toHaveScreenshot(
                 `${theme}-comparison.png`
