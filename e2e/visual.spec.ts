@@ -38,6 +38,9 @@ test.describe('Visual Regression Tests', () => {
         await page.selectOption('#theme', 'classic');
         await page.click('#play_by_id');
 
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
+
         await expect(page.locator('table.nonogram.classic')).toHaveScreenshot(
             'classic-initial.png'
         );
@@ -53,6 +56,9 @@ test.describe('Visual Regression Tests', () => {
         await page.locator('td.nonogram_cell').nth(1).click(); // Empty
         await page.locator('td.nonogram_cell').nth(5).click(); // Filled
 
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
+
         await expect(page.locator('table.nonogram.classic')).toHaveScreenshot(
             'classic-with-guesses.png'
         );
@@ -61,6 +67,9 @@ test.describe('Visual Regression Tests', () => {
     test('paper theme - initial state', async ({ page }) => {
         await page.selectOption('#theme', 'paper');
         await page.click('#play_by_id');
+
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
 
         await expect(page.locator('table.nonogram.paper')).toHaveScreenshot('paper-initial.png');
     });
@@ -75,6 +84,9 @@ test.describe('Visual Regression Tests', () => {
         await page.locator('td.nonogram_cell').nth(2).click();
         await page.locator('td.nonogram_cell').nth(7).click();
 
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
+
         await expect(page.locator('table.nonogram.paper')).toHaveScreenshot(
             'paper-with-guesses.png'
         );
@@ -83,6 +95,9 @@ test.describe('Visual Regression Tests', () => {
     test('koala theme - initial state', async ({ page }) => {
         await page.selectOption('#theme', 'koala');
         await page.click('#play_by_id');
+
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
 
         await expect(page.locator('table.nonogram.koala')).toHaveScreenshot('koala-initial.png');
     });
@@ -95,6 +110,9 @@ test.describe('Visual Regression Tests', () => {
         await page.locator('td.nonogram_cell').nth(4).click();
         await page.locator('td.nonogram_cell').nth(4).click();
 
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
+
         await expect(page.locator('table.nonogram.koala')).toHaveScreenshot(
             'koala-with-guesses.png'
         );
@@ -103,6 +121,9 @@ test.describe('Visual Regression Tests', () => {
     test('small theme - initial state', async ({ page }) => {
         await page.selectOption('#theme', 'small');
         await page.click('#play_by_id');
+
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
 
         await expect(page.locator('table.nonogram.small')).toHaveScreenshot('small-initial.png');
     });
@@ -114,6 +135,9 @@ test.describe('Visual Regression Tests', () => {
         await page.locator('td.nonogram_cell').nth(1).click();
         await page.locator('td.nonogram_cell').nth(6).click();
         await page.locator('td.nonogram_cell').nth(6).click();
+
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
 
         await expect(page.locator('table.nonogram.small')).toHaveScreenshot(
             'small-with-guesses.png'
@@ -158,6 +182,9 @@ test.describe('Visual Regression Tests', () => {
 
         // Wait for dialog to close
         await page.waitForTimeout(100);
+
+        // Move mouse away to avoid hover effects
+        await page.mouse.move(0, 0);
 
         await expect(page.locator('table.nonogram.classic')).toHaveScreenshot(
             'classic-fully-hinted.png'
