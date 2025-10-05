@@ -37,7 +37,7 @@ describe('HintProvider', () => {
 
     describe('findHint', () => {
         it('should return null when puzzle is complete', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(1, 1, CellState.FILLED);
 
@@ -49,10 +49,10 @@ describe('HintProvider', () => {
         });
 
         it('should correct an error when filled cell is marked empty', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(1, 1, CellState.FILLED);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(1, 1, CellState.EMPTY); // Error!
 
             const hint = hintProvider.findHint(actualGrid, guessGrid);
@@ -65,10 +65,10 @@ describe('HintProvider', () => {
         });
 
         it('should correct an error when empty cell is marked filled', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.EMPTY);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(0, 0, CellState.FILLED); // Error!
 
             const hint = hintProvider.findHint(actualGrid, guessGrid);
@@ -81,12 +81,12 @@ describe('HintProvider', () => {
         });
 
         it('should reveal a random unknown cell when no errors exist', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(1, 1, CellState.FILLED);
             actualGrid.set(2, 2, CellState.EMPTY);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(0, 0, CellState.FILLED); // Correct
 
             const hint = hintProvider.findHint(actualGrid, guessGrid);
@@ -96,11 +96,11 @@ describe('HintProvider', () => {
         });
 
         it('should prioritize errors over unknown cells', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(2, 2, CellState.FILLED);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(0, 0, CellState.EMPTY); // Error!
 
             const hint = hintProvider.findHint(actualGrid, guessGrid);
@@ -114,7 +114,7 @@ describe('HintProvider', () => {
         });
 
         it('should use seeded random for consistent hint selection', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(1, 1, CellState.EMPTY);
             actualGrid.set(2, 2, CellState.FILLED);
@@ -123,8 +123,8 @@ describe('HintProvider', () => {
             const provider1 = new HintProvider(new Srand(99999));
             const provider2 = new HintProvider(new Srand(99999));
 
-            const guessGrid1 = new Grid(3, 3, CellState.UNKNOWN);
-            const guessGrid2 = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid1 = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
+            const guessGrid2 = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
 
             const hint1 = provider1.findHint(actualGrid, guessGrid1);
             const hint2 = provider2.findHint(actualGrid, guessGrid2);
@@ -134,11 +134,11 @@ describe('HintProvider', () => {
         });
 
         it('should find first error in grid order', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(2, 2, CellState.FILLED);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(0, 0, CellState.EMPTY); // First error
             guessGrid.set(2, 2, CellState.EMPTY); // Second error
 
@@ -153,11 +153,11 @@ describe('HintProvider', () => {
         });
 
         it('should handle grid with only unknown cells', () => {
-            const actualGrid = new Grid(2, 2, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(2, 2, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(1, 1, CellState.EMPTY);
 
-            const guessGrid = new Grid(2, 2, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(2, 2, CellState.UNKNOWN);
 
             const hint = hintProvider.findHint(actualGrid, guessGrid);
 
@@ -167,12 +167,12 @@ describe('HintProvider', () => {
         });
 
         it('should handle mixed correct guesses and unknown cells', () => {
-            const actualGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const actualGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             actualGrid.set(0, 0, CellState.FILLED);
             actualGrid.set(1, 1, CellState.EMPTY);
             actualGrid.set(2, 2, CellState.FILLED);
 
-            const guessGrid = new Grid(3, 3, CellState.UNKNOWN);
+            const guessGrid = new Grid<CellStateType>(3, 3, CellState.UNKNOWN);
             guessGrid.set(0, 0, CellState.FILLED); // Correct
             guessGrid.set(2, 2, CellState.FILLED); // Correct
             // (1,1) is unknown
